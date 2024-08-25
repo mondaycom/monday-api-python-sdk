@@ -4,7 +4,7 @@ import time
 from enum import Enum
 from typing import List, Iterable, Tuple, Any, Optional, Union
 from .types import Item, Operator
-from .settings import MAX_COMPLEXITY
+from .constants import MAX_COMPLEXITY
 
 
 def extract_column_value_by_title(item: Item, column_name: str) -> Union[str, bool]:
@@ -25,7 +25,9 @@ def monday_json_stringify(value):
     return json.dumps(json.dumps(value))
 
 
-def gather_params(params: Iterable[Tuple[str, Any]], excluded_params: Optional[List[str]] = None, exclude_none: bool = True) -> str:
+def gather_params(
+    params: Iterable[Tuple[str, Any]], excluded_params: Optional[List[str]] = None, exclude_none: bool = True
+) -> str:
     valid_params = [
         f"{param}: {format_param_value(value)}"
         for param, value in params

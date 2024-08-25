@@ -92,16 +92,3 @@ class Data:
 class MondayApiResponse:
     data: Data
     account_id: int
-
-
-"""
-summary of classes created here: MondayApiResponse, Data, Complexity, Board, ItemsPage, Item, Column, ColumnValue, Group
-example usage:
-
-import dacite
-
-response = fetch_board_items(6430059868, '2024-06-23', '2024-07-01')
-serialized_response = dacite.from_dict(data_class=MondayApiResponse, data=res) 
-first_item_name = serialized_response.data.boards[0].items_page.items[0].name
-
-"""
