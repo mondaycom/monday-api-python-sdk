@@ -10,7 +10,10 @@ from utils import monday_json_stringify, gather_params
 
 
 def get_board_items_query(
-    board_ids: Union[int, str], limit: int, query_params: Optional[Mapping[str, Any]] = None, cursor: Optional[str] = None
+    board_ids: Union[int, str],
+    limit: int,
+    query_params: Optional[Mapping[str, Any]] = None,
+    cursor: Optional[str] = None,
 ) -> str:
     if cursor is None:
         return get_board_items_first_page_query(board_ids, query_params=query_params, limit=limit)
@@ -18,7 +21,9 @@ def get_board_items_query(
         return get_board_items_pagination_query(cursor=cursor, limit=limit)
 
 
-def get_board_items_first_page_query(board_id: Union[str, int], limit: int, query_params: Optional[Mapping[str, Any]] = None) -> str:
+def get_board_items_first_page_query(
+    board_id: Union[str, int], limit: int, query_params: Optional[Mapping[str, Any]] = None
+) -> str:
     raw_params = locals().items()
     items_page_params = gather_params(raw_params, excluded_params=["board_id"])
     wrapped_params = f"({items_page_params})" if items_page_params else ""
@@ -582,7 +587,12 @@ def get_update_query(limit, page=1):
 
 
 def get_boards_query(
-    ids: List[int], limit: int, page: int = 1, board_kind: BoardKind = None, state: BoardState = None, order_by: BoardsOrderBy = None
+    ids: List[int],
+    limit: int,
+    page: int = 1,
+    board_kind: BoardKind = None,
+    state: BoardState = None,
+    order_by: BoardsOrderBy = None,
 ):
     parameters = locals().items()
     query_params = []
@@ -692,7 +702,11 @@ def get_complexity_query():
 
 
 def get_activity_logs_query(
-    board_id: Union[int, str], limit: int, page: Optional[int] = 1, from_date: Optional[str] = None, to_date: Optional[str] = None
+    board_id: Union[int, str],
+    limit: int,
+    page: Optional[int] = 1,
+    from_date: Optional[str] = None,
+    to_date: Optional[str] = None,
 ):
     raw_params = locals().items()
     activity_logs_params = gather_params(raw_params, excluded_params=["board_id", "from_date", "to_date"])

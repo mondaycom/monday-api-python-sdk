@@ -4,8 +4,8 @@ import json
 import time
 
 from exceptions import MondayQueryError
-from settings import API_URL, DEBUG_MODE, TOKEN_HEADER, MAX_RETRY_ATTEMPTS
-from types import MondayApiResponse
+from constants import API_URL, TOKEN_HEADER
+from types import MondayApiResponse, MondayClientSettings
 
 
 class MondayGraphQL:
@@ -13,11 +13,12 @@ class MondayGraphQL:
     GraphQL client that handles API interactions, response serialization, and error handling.
     """
 
-    def __init__(self, token: str, headers: dict):
+    def __init__(self, settings: MondayClientSettings):
         self.endpoint = API_URL
-        self.token = token
-        self.headers = headers
-        self.debug_mode = DEBUG_MODE
+        self.token = settings.token
+        self.headers = settings.headers
+        self.debug_mode = settings.debug_mode
+        self.max_retry_attempts = settings.max_retry_attempts
 
     def execute(self, query: str) -> MondayApiResponse:
         """
@@ -31,7 +32,7 @@ class MondayGraphQL:
         """
         current_attempt = 0
 
-        while current_attempt < MAX_RETRY_ATTEMPTS:
+        while current_attempt < self.max_retry_attempts:
 
             if self.debug_mode:
                 print(f"[debug_mode] about to execute query: {query}")
