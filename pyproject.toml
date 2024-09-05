@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "monday-python-sdk"
+requires-python = ">=3.8"
+dynamic = ["version"]
+dependencies = [
+  "dacite",
+  "requests",
+]
+authors = [
+  {name = "Michael Imas", email = "michaelim@monday.com"},
+]
+readme = "README.md"
+description = "A Python SDK for interacting with Monday's GraphQL API."

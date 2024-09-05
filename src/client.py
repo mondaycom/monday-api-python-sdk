@@ -3,7 +3,6 @@ from .settings import API_VERSION
 
 BASE_HEADERS = {"API-Version": API_VERSION}
 
-
 class MondayClient:
     def __init__(self, token, headers=None):
 
