@@ -1,7 +1,8 @@
-import dacite
-import requests
 import json
 import time
+
+import dacite
+import requests
 
 from .exceptions import MondayQueryError
 from .settings import API_URL, DEBUG_MODE, TOKEN_HEADER, MAX_RETRY_ATTEMPTS

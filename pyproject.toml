@@ -13,5 +13,8 @@ dependencies = [
 authors = [
   {name = "Michael Imas", email = "michaelim@monday.com"},
 ]
+maintainers = [
+  {name = "Rafał Zawadzki", email = "rafalza@monday.com"},
+]
 readme = "README.md"
 description = "A Python SDK for interacting with Monday's GraphQL API."
