@@ -1,10 +1,10 @@
 from typing import List, Optional, Union, Any, Mapping
 
-from services.monday_api.graphql_handler import MondayGraphQL # type: ignore
-from services.monday_api.query_templates import get_boards_query, get_board_by_id_query, get_board_items_query, get_columns_by_board_query  # type: ignore
-from services.monday_api.types import MondayApiResponse, Item, ItemsPage, BoardKind, BoardState, BoardsOrderBy  # type: ignore
-from services.monday_api.utils import sleep_according_to_complexity, construct_updated_at_query_params  # type: ignore
-from services.monday_api.settings import DEFAULTS # type: ignore
+from ..graphql_handler import MondayGraphQL # type: ignore
+from ..query_templates import get_boards_query, get_board_by_id_query, get_board_items_query, get_columns_by_board_query  # type: ignore
+from ..types import MondayApiResponse, Item, ItemsPage, BoardKind, BoardState, BoardsOrderBy  # type: ignore
+from ..utils import sleep_according_to_complexity, construct_updated_at_query_params  # type: ignore
+from ..settings import DEFAULTS # type: ignore
 
 BOARDS_DEFAULT_LIMIT = DEFAULTS["DEFAULT_PAGE_LIMIT_BOARDS"]
 ITEMS_DEFAULT_LIMIT = DEFAULTS["DEFAULT_PAGE_LIMIT_ITEMS"]

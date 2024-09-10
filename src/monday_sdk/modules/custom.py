@@ -1,4 +1,4 @@
-from services.monday_api.graphql_handler import MondayGraphQL # type: ignore
+from ..graphql_handler import MondayGraphQL # type: ignore
 
 
 class CustomModule(MondayGraphQL):

@@ -1,8 +1,8 @@
 from typing import List
 
-from services.monday_api.query_templates import create_update_query, delete_update_query, get_update_query, get_updates_for_item_query, get_updates_for_board # type: ignore
-from services.monday_api.types import MondayApiResponse, Update # type: ignore
-from services.monday_api.graphql_handler import MondayGraphQL # type: ignore
+from  import create_update_query, delete_update_query, get_update_query, get_updates_for_item_query, get_updates_for_board # type: ignore
+from ..types import MondayApiResponse, Update # type: ignore
+from ..graphql_handler import MondayGraphQL # type: ignore
 
 
 class UpdateModule(MondayGraphQL):

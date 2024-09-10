@@ -1,10 +1,10 @@
 from typing import Union, Dict, Any, List
 
-from services.monday_api.graphql_handler import MondayGraphQL # type: ignore
-from services.monday_api.query_templates import create_item_query, get_item_query, change_column_value_query, get_item_by_id_query, update_multiple_column_values_query, create_subitem_query, delete_item_query, archive_item_query, move_item_to_group_query, change_simple_column_value_query  # type: ignore
+from ..graphql_handler import MondayGraphQL
+from ..query_templates import create_item_query, get_item_query, change_column_value_query, get_item_by_id_query, update_multiple_column_values_query, create_subitem_query, delete_item_query, archive_item_query, move_item_to_group_query, change_simple_column_value_query  # type: ignore
 import datetime
 
-from services.monday_api.types import MondayApiResponse, Item
+from ..types import MondayApiResponse, Item
 
 
 class ItemModule(MondayGraphQL):
