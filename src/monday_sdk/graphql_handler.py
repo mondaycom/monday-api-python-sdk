@@ -3,9 +3,9 @@ import requests
 import json
 import time
 
-from exceptions import MondayQueryError
-from settings import API_URL, DEBUG_MODE, TOKEN_HEADER, MAX_RETRY_ATTEMPTS
-from types import MondayApiResponse
+from .exceptions import MondayQueryError
+from .settings import API_URL, DEBUG_MODE, TOKEN_HEADER, MAX_RETRY_ATTEMPTS
+from .types import MondayApiResponse
 
 
 class MondayGraphQL:

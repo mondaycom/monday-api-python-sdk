@@ -1,7 +1,7 @@
-from query_templates import get_activity_logs_query
-from types import MondayApiResponse, ActivityLog
-from graphql_handler import MondayGraphQL
-from settings import DEFAULTS
+from ..query_templates import get_activity_logs_query
+from ..types import MondayApiResponse, ActivityLog
+from ..graphql_handler import MondayGraphQL
+from ..settings import DEFAULTS
 from typing import Optional, Union, List
 
 ACTIVITY_LOGS_DEFAULT_LIMIT = DEFAULTS["DEFAULT_PAGE_LIMIT_ACTIVITY_LOGS"]

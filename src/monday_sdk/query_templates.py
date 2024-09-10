@@ -2,8 +2,8 @@ import json
 from enum import Enum
 from typing import List, Union, Optional, Mapping, Any
 
-from types import BoardKind, BoardState, BoardsOrderBy
-from utils import monday_json_stringify, gather_params
+from .types import BoardKind, BoardState, BoardsOrderBy
+from .utils import monday_json_stringify, gather_params
 
 
 # todo: divide into separate files, take into account that multiple resources can use the same query
