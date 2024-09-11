@@ -82,22 +82,22 @@ setup(
     #
     # Similar to `install_requires` above, these must be valid existing
     # projects.
-    #extras_require={  # Optional
+    # extras_require={  # Optional
     #    "dev": ["check-manifest"],
     #    "test": ["coverage"],
-    #},
+    # },
     # If there are data files included in your packages that need to be
     # installed, specify them here.
-    #package_data={  # Optional
+    # package_data={  # Optional
     #    "sample": ["package_data.dat"],
-    #},
+    # },
     # Entry points. The following would provide a command called `sample` which
     # executes the function `main` from this package when invoked:
-    #entry_points={  # Optional
+    # entry_points={  # Optional
     #    "console_scripts": [
     #        "sample=sample:main",
     #    ],
-    #},
+    # },
     # List additional URLs that are relevant to your project as a dict.
     #
     # This field corresponds to the "Project-URL" metadata fields:
@@ -107,10 +107,10 @@ setup(
     # issues, where the source is hosted, where to say thanks to the package
     # maintainers, and where to support the project financially. The key is
     # what's used to render the link text on PyPI.
-    #project_urls={  # Optional
+    # project_urls={  # Optional
     #    "Bug Reports": "https://github.com/pypa/sampleproject/issues",
     #    "Funding": "https://donate.pypi.org",
     #    "Say Thanks!": "http://saythanks.io/to/example",
     #    "Source": "https://github.com/pypa/sampleproject/",
-    #},
+    # },
 )

@@ -25,7 +25,9 @@ def monday_json_stringify(value):
     return json.dumps(json.dumps(value))
 
 
-def gather_params(params: Iterable[Tuple[str, Any]], excluded_params: Optional[List[str]] = None, exclude_none: bool = True) -> str:
+def gather_params(
+    params: Iterable[Tuple[str, Any]], excluded_params: Optional[List[str]] = None, exclude_none: bool = True
+) -> str:
     valid_params = [
         f"{param}: {format_param_value(value)}"
         for param, value in params
