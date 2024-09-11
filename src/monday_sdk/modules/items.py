@@ -2,7 +2,7 @@ from typing import Union, Dict, Any, List
 import datetime
 
 from ..graphql_handler import MondayGraphQL
-from ..query_templates import create_item_query, get_item_query, change_column_value_query, get_item_by_id_query, update_multiple_column_values_query, create_subitem_query, delete_item_query, archive_item_query, move_item_to_group_query, change_simple_column_value_query  # type: ignore
+from ..query_templates import create_item_query, get_item_query, change_column_value_query, get_item_by_id_query, update_multiple_column_values_query, create_subitem_query, delete_item_query, archive_item_query, move_item_to_group_query, change_simple_column_value_query
 from ..types import Item
 
 

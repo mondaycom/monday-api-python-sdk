@@ -1,4 +1,5 @@
-from ..graphql_handler import MondayGraphQL  # type: ignore
+from ..graphql_handler import MondayGraphQL
+
 
 class CustomModule(MondayGraphQL):
     def execute_custom_query(self, custom_query):

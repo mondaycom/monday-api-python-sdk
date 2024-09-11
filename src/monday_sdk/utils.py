@@ -4,7 +4,7 @@ import time
 from enum import Enum
 from typing import List, Iterable, Tuple, Any, Optional, Union
 from .types import Item, Operator
-from .settings import MAX_COMPLEXITY
+from .constants import MAX_COMPLEXITY
 
 
 def extract_column_value_by_title(item: Item, column_name: str) -> Union[str, bool]:

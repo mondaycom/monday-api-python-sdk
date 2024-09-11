@@ -95,7 +95,7 @@ client = MondayClient(token='your_token')
 
 ### Get Boards
 ```python
-boards = client.Boards.fetch_boards()
+boards = client.boards.fetch_boards()
 print(boards)
 ```
 ### Create Item
@@ -130,7 +130,7 @@ import dacite
 client = MondayClient(token='your_token')
 
 # Fetch the raw response data
-response_data = client.Boards.get_board_items(board_id='your_board_id')
+response_data = client.boards.get_board_items(board_id='your_board_id')
 
 # Deserialize the response data into typed objects
 monday_response = dacite.from_dict(data_class=MondayApiResponse, data=response_data)
@@ -152,7 +152,7 @@ Here are some examples of how to use the SDK:
 from monday_sdk import MondayClient
 
 client = MondayClient(token='your_token')
-boards = client.Boards.fetch_boards()
+boards = client.boards.fetch_boards()
 for board in boards:
     print(board['name'])
 ```
