@@ -32,12 +32,12 @@ client = MondayClient(api_token='your_api_token')
 
 ### Get Boards
 ```python
-boards = client.get_boards()
+boards = client.boards.fetch_boards()
 print(boards)
 ```
 ### Create Item
 ```python
-item = client.create_item(board_id='your_board_id', item_name='New Item')
+item = client.items.create_item(board_id='your_board_id', group_id='your_group_id', item_name='New Item')
 print(item)
 ```
 ## Examples
@@ -49,7 +49,7 @@ Here are some examples of how to use the SDK:
 from monday_sdk import MondayClient
 
 client = MondayClient(api_token='your_api_token')
-boards = client.get_boards()
+boards = client.boards.fetch_boards()
 for board in boards:
     print(board['name'])
 ```
@@ -95,12 +95,12 @@ client = MondayClient(api_token='your_api_token')
 
 ### Get Boards
 ```python
-boards = client.Boards.get_boards()
+boards = client.Boards.fetch_boards()
 print(boards)
 ```
 ### Create Item
 ```python
-item = client.Items.create_item(board_id='your_board_id', item_name='New Item')
+item = client.items.create_item(board_id='your_board_id', item_name='New Item')
 print(item)
 ```
 ## Response Types
@@ -152,7 +152,7 @@ Here are some examples of how to use the SDK:
 from monday_sdk import MondayClient
 
 client = MondayClient(api_token='your_api_token')
-boards = client.get_boards()
+boards = client.Boards.fetch_boards()
 for board in boards:
     print(board['name'])
 ```
@@ -161,7 +161,7 @@ for board in boards:
 from monday_sdk import MondayClient
 
 client = MondayClient(api_token='your_api_token')
-item = client.create_item(board_id='your_board_id', item_name='New Item')
+item = client.items.create_item(board_id='your_board_id', item_name='New Item')
 print(item)
 ```
 ### Example 3: Create an update
