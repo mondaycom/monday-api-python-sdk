@@ -9,7 +9,6 @@ from ..settings import DEFAULTS # type: ignore
 BOARDS_DEFAULT_LIMIT = DEFAULTS["DEFAULT_PAGE_LIMIT_BOARDS"]
 ITEMS_DEFAULT_LIMIT = DEFAULTS["DEFAULT_PAGE_LIMIT_ITEMS"]
 
-
 class BoardModule(MondayGraphQL):
     def fetch_boards(
         self,
@@ -58,7 +57,8 @@ class BoardModule(MondayGraphQL):
         return items
 
     def fetch_item_by_board_id_by_update_date(
-        self, board_id: Union[int, str], updated_after: str, updated_before: str, limit: Optional[int] = ITEMS_DEFAULT_LIMIT
+        self, board_id: Union[int, str], updated_after: str, updated_before: str, 
+        limit: Optional[int] = ITEMS_DEFAULT_LIMIT
     ) -> List[Item]:
         """
         Fetches items from a board by board ID by update date, useful for incremental fetching

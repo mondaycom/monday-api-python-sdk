@@ -4,7 +4,6 @@ from ..query_templates import create_update_query, delete_update_query, get_upda
 from ..types import MondayApiResponse, Update # type: ignore
 from ..graphql_handler import MondayGraphQL # type: ignore
 
-
 class UpdateModule(MondayGraphQL):
     def create_update(self, item_id, update_value) -> MondayApiResponse:
         query = create_update_query(item_id, update_value)

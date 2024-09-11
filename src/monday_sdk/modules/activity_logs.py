@@ -1,14 +1,13 @@
+from typing import Optional, Union, List
+
 from ..query_templates import get_activity_logs_query
 from ..types import MondayApiResponse, ActivityLog
 from ..graphql_handler import MondayGraphQL
 from ..settings import DEFAULTS
-from typing import Optional, Union, List
 
 ACTIVITY_LOGS_DEFAULT_LIMIT = DEFAULTS["DEFAULT_PAGE_LIMIT_ACTIVITY_LOGS"]
 
-
 class ActivityLogModule(MondayGraphQL):
-
     def fetch_activity_logs_from_board(
         self,
         board_ids: Union[int, str],
@@ -31,12 +30,16 @@ class ActivityLogModule(MondayGraphQL):
         page = 1
         activity_logs = []
         while True:
-            response = self.fetch_activity_logs_from_board(board_ids=board_ids, limit=limit, page=page, from_date=from_date, to_date=to_date)
+            response = self.fetch_activity_logs_from_board(
+                board_ids=board_ids, limit=limit, page=page,
+                from_date=from_date,to_date=to_date
+            )
             current_activity_logs = response.data.boards[0].activity_logs
             if not current_activity_logs:  # ATM is the only way to check if there are no more activity logs
                 break
             else:
-                relevant_activity_logs = current_activity_logs if events_filter is None else [log for log in current_activity_logs if log.event in events_filter]
+                relevant_activity_logs = current_activity_logs if events_filter is None else
+                    [log for log in current_activity_logs if log.event in events_filter]
                 activity_logs.extend(relevant_activity_logs)
                 page += 1
 
