@@ -15,12 +15,12 @@ long_description = (here / "README.md").read_text(encoding="utf-8")
 
 setup(
     name="monday-python-sdk",  # Required
-    version="0.0.1",  # Required
+    version="0.0.2",  # Required
     description="A Python SDK for interacting with Monday's GraphQL API",  # Optional
     long_description=long_description,  # Optional
     long_description_content_type="text/markdown",  # Optional (see note above)
     url="https://github.com/mondaycom/monday-api-python-sdk",  # Optional
-    author="A. Random Developer",  # Optional
+    author="Michael Imas",  # Optional
     author_email="author@example.com",  # Optional
     classifiers=[  # Optional
         # How mature is this project? Common values are
