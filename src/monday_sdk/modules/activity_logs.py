@@ -31,12 +31,18 @@ class ActivityLogModule(MondayGraphQL):
         page = 1
         activity_logs = []
         while True:
-            response = self.fetch_activity_logs_from_board(board_ids=board_ids, limit=limit, page=page, from_date=from_date, to_date=to_date)
+            response = self.fetch_activity_logs_from_board(
+                board_ids=board_ids, limit=limit, page=page, from_date=from_date, to_date=to_date
+            )
             current_activity_logs = response.data.boards[0].activity_logs
             if not current_activity_logs:  # ATM is the only way to check if there are no more activity logs
                 break
             else:
-                relevant_activity_logs = current_activity_logs if events_filter is None else [log for log in current_activity_logs if log.event in events_filter]
+                relevant_activity_logs = (
+                    current_activity_logs
+                    if events_filter is None
+                    else [log for log in current_activity_logs if log.event in events_filter]
+                )
                 activity_logs.extend(relevant_activity_logs)
                 page += 1
 

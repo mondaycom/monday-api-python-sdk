@@ -1,10 +1,10 @@
 from typing import List, Optional, Union, Any, Mapping
 
-from ..graphql_handler import MondayGraphQL # type: ignore
+from ..graphql_handler import MondayGraphQL  # type: ignore
 from ..query_templates import get_boards_query, get_board_by_id_query, get_board_items_query, get_columns_by_board_query  # type: ignore
 from ..types import MondayApiResponse, Item, ItemsPage, BoardKind, BoardState, BoardsOrderBy  # type: ignore
 from ..utils import sleep_according_to_complexity, construct_updated_at_query_params  # type: ignore
-from ..settings import DEFAULTS # type: ignore
+from ..settings import DEFAULTS  # type: ignore
 
 BOARDS_DEFAULT_LIMIT = DEFAULTS["DEFAULT_PAGE_LIMIT_BOARDS"]
 ITEMS_DEFAULT_LIMIT = DEFAULTS["DEFAULT_PAGE_LIMIT_ITEMS"]
@@ -28,7 +28,10 @@ class BoardModule(MondayGraphQL):
         return self.execute(query)
 
     def fetch_all_items_by_board_id(
-        self, board_id: Union[int, str], query_params: Optional[Mapping[str, Any]] = None, limit: Optional[int] = ITEMS_DEFAULT_LIMIT
+        self,
+        board_id: Union[int, str],
+        query_params: Optional[Mapping[str, Any]] = None,
+        limit: Optional[int] = ITEMS_DEFAULT_LIMIT,
     ) -> List[Item]:
         """
         Fetches all items from a board by board ID, includes paginating
@@ -58,14 +61,20 @@ class BoardModule(MondayGraphQL):
         return items
 
     def fetch_item_by_board_id_by_update_date(
-        self, board_id: Union[int, str], updated_after: str, updated_before: str, limit: Optional[int] = ITEMS_DEFAULT_LIMIT
+        self,
+        board_id: Union[int, str],
+        updated_after: str,
+        updated_before: str,
+        limit: Optional[int] = ITEMS_DEFAULT_LIMIT,
     ) -> List[Item]:
         """
         Fetches items from a board by board ID by update date, useful for incremental fetching
         todo: add type hints for updated_after and updated_before and validate them
         """
         if not updated_after and not updated_before:
-            raise ValueError("Either updated_after or updated_before must be provided when fetching items by update date")
+            raise ValueError(
+                "Either updated_after or updated_before must be provided when fetching items by update date"
+            )
         query_params = construct_updated_at_query_params(updated_after, updated_before)
         return self.fetch_all_items_by_board_id(board_id, query_params=query_params, limit=limit)
 
