@@ -25,7 +25,7 @@ To use the SDK, you need to authenticate with your Monday API token:
 ```python
 from monday_sdk import MondayClient
 
-client = MondayClient(api_token='your_api_token')
+client = MondayClient(token='your_token')
 ```
 
 ## API Methods
@@ -48,7 +48,7 @@ Here are some examples of how to use the SDK:
 ```python
 from monday_sdk import MondayClient
 
-client = MondayClient(api_token='your_api_token')
+client = MondayClient(token='your_token')
 boards = client.boards.fetch_boards()
 for board in boards:
     print(board['name'])
@@ -57,7 +57,7 @@ for board in boards:
 ```python
 from monday_sdk import MondayClient
 
-client = MondayClient(api_token='your_api_token')
+client = MondayClient(token='your_token')
 item = client.create_item(board_id='your_board_id', item_name='New Item')
 print(item)
 ```
@@ -89,7 +89,7 @@ To use the SDK, you need to authenticate with your Monday API token:
 ```bash
 from monday_sdk import MondayClient
 
-client = MondayClient(api_token='your_api_token')
+client = MondayClient(token='your_token')
 ```
 ## API Methods
 
@@ -127,7 +127,7 @@ Here is an example of how to use these types with the SDK to deserialize API res
 from monday_sdk import MondayClient, MondayApiResponse
 import dacite
 
-client = MondayClient(api_token='your_api_token')
+client = MondayClient(token='your_token')
 
 # Fetch the raw response data
 response_data = client.Boards.get_board_items(board_id='your_board_id')
@@ -151,7 +151,7 @@ Here are some examples of how to use the SDK:
 ```python
 from monday_sdk import MondayClient
 
-client = MondayClient(api_token='your_api_token')
+client = MondayClient(token='your_token')
 boards = client.Boards.fetch_boards()
 for board in boards:
     print(board['name'])
@@ -160,7 +160,7 @@ for board in boards:
 ```python
 from monday_sdk import MondayClient
 
-client = MondayClient(api_token='your_api_token')
+client = MondayClient(token='your_token')
 item = client.items.create_item(board_id='your_board_id', item_name='New Item')
 print(item)
 ```
@@ -168,5 +168,5 @@ print(item)
 ```python
 from monday_sdk import MondayClient
 
-client = MondayClient(api_token='your_api_token')
+client = MondayClient(token='your_token')
 ```
