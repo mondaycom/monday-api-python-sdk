@@ -130,7 +130,7 @@ import dacite
 client = MondayClient(token='your_token')
 
 # Fetch the raw response data
-response_data = client.boards.get_board_items(board_id='your_board_id')
+response_data = client.boards.fetch_all_items_by_board_id(board_id='your_board_id')
 
 # Deserialize the response data into typed objects
 monday_response = dacite.from_dict(data_class=MondayApiResponse, data=response_data)
