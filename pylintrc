@@ -1,0 +1,5 @@
+[MAIN]
+max-args = 6
+py-version = 3.8
+[FORMAT]
+max-line-length=120
