@@ -1,4 +1,4 @@
-# monday-python-sdk
+# monday-api-python-sdk
 
 A Python SDK for interacting with Monday's GraphQL API.
 
@@ -15,7 +15,7 @@ A Python SDK for interacting with Monday's GraphQL API.
 To install the SDK, use pip:
 
 ```bash
-pip install monday-python-sdk
+pip install monday-api-python-sdk
 ```
 ## Usage
 
@@ -63,7 +63,7 @@ print(item)
 ```
 
 
-# monday-python-sdk
+# monday-api-python-sdk
 
 A Python SDK for interacting with Monday's GraphQL API.
 
@@ -80,7 +80,7 @@ A Python SDK for interacting with Monday's GraphQL API.
 
 To install the SDK, use pip:
 ```python
-pip install monday-python-sdk
+pip install monday-api-python-sdk
 ```
 ## Usage
 
