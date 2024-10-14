@@ -1,18 +1,17 @@
-from typing import Optional, Union, List
-
 from ..query_templates import get_activity_logs_query
 from ..types import MondayApiResponse, ActivityLog
 from ..graphql_handler import MondayGraphQL
-from ..settings import DEFAULTS
+from ..constants import DEFAULT_PAGE_LIMIT_ACTIVITY_LOGS
+from typing import Optional, Union, List
 
-ACTIVITY_LOGS_DEFAULT_LIMIT = DEFAULTS["DEFAULT_PAGE_LIMIT_ACTIVITY_LOGS"]
 
 class ActivityLogModule(MondayGraphQL):
+
     def fetch_activity_logs_from_board(
         self,
         board_ids: Union[int, str],
         page: Optional[int] = 1,
-        limit: Optional[int] = ACTIVITY_LOGS_DEFAULT_LIMIT,
+        limit: Optional[int] = DEFAULT_PAGE_LIMIT_ACTIVITY_LOGS,
         from_date: Optional[str] = None,
         to_date: Optional[str] = None,
     ) -> MondayApiResponse:
@@ -24,7 +23,7 @@ class ActivityLogModule(MondayGraphQL):
         board_ids: Union[int, str],
         from_date: Optional[str] = None,
         to_date: Optional[str] = None,
-        limit: Optional[int] = ACTIVITY_LOGS_DEFAULT_LIMIT,
+        limit: Optional[int] = DEFAULT_PAGE_LIMIT_ACTIVITY_LOGS,
         events_filter: Optional[List[str]] = None,
     ) -> List[ActivityLog]:
         page = 1

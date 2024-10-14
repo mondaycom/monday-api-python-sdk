@@ -25,19 +25,19 @@ To use the SDK, you need to authenticate with your Monday API token:
 ```python
 from monday_sdk import MondayClient
 
-client = MondayClient(api_token='your_api_token')
+client = MondayClient(token='your_token')
 ```
 
 ## API Methods
 
 ### Get Boards
 ```python
-boards = client.get_boards()
+boards = client.boards.fetch_boards()
 print(boards)
 ```
 ### Create Item
 ```python
-item = client.create_item(board_id='your_board_id', item_name='New Item')
+item = client.items.create_item(board_id='your_board_id', group_id='your_group_id', item_name='New Item')
 print(item)
 ```
 ## Examples
@@ -48,8 +48,8 @@ Here are some examples of how to use the SDK:
 ```python
 from monday_sdk import MondayClient
 
-client = MondayClient(api_token='your_api_token')
-boards = client.get_boards()
+client = MondayClient(token='your_token')
+boards = client.boards.fetch_boards()
 for board in boards:
     print(board['name'])
 ```
@@ -57,7 +57,7 @@ for board in boards:
 ```python
 from monday_sdk import MondayClient
 
-client = MondayClient(api_token='your_api_token')
+client = MondayClient(token='your_token')
 item = client.create_item(board_id='your_board_id', item_name='New Item')
 print(item)
 ```
@@ -89,18 +89,18 @@ To use the SDK, you need to authenticate with your Monday API token:
 ```bash
 from monday_sdk import MondayClient
 
-client = MondayClient(api_token='your_api_token')
+client = MondayClient(token='your_token')
 ```
 ## API Methods
 
 ### Get Boards
 ```python
-boards = client.Boards.get_boards()
+boards = client.boards.fetch_boards()
 print(boards)
 ```
 ### Create Item
 ```python
-item = client.Items.create_item(board_id='your_board_id', item_name='New Item')
+item = client.items.create_item(board_id='your_board_id', item_name='New Item')
 print(item)
 ```
 ## Response Types
@@ -127,10 +127,10 @@ Here is an example of how to use these types with the SDK to deserialize API res
 from monday_sdk import MondayClient, MondayApiResponse
 import dacite
 
-client = MondayClient(api_token='your_api_token')
+client = MondayClient(token='your_token')
 
 # Fetch the raw response data
-response_data = client.Boards.get_board_items(board_id='your_board_id')
+response_data = client.boards.fetch_all_items_by_board_id(board_id='your_board_id')
 
 # Deserialize the response data into typed objects
 monday_response = dacite.from_dict(data_class=MondayApiResponse, data=response_data)
@@ -151,8 +151,8 @@ Here are some examples of how to use the SDK:
 ```python
 from monday_sdk import MondayClient
 
-client = MondayClient(api_token='your_api_token')
-boards = client.get_boards()
+client = MondayClient(token='your_token')
+boards = client.boards.fetch_boards()
 for board in boards:
     print(board['name'])
 ```
@@ -160,13 +160,13 @@ for board in boards:
 ```python
 from monday_sdk import MondayClient
 
-client = MondayClient(api_token='your_api_token')
-item = client.create_item(board_id='your_board_id', item_name='New Item')
+client = MondayClient(token='your_token')
+item = client.items.create_item(board_id='your_board_id', item_name='New Item')
 print(item)
 ```
 ### Example 3: Create an update
 ```python
 from monday_sdk import MondayClient
 
-client = MondayClient(api_token='your_api_token')
+client = MondayClient(token='your_token')
 ```

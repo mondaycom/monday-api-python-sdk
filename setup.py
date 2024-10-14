@@ -22,7 +22,7 @@ setup(
     url="https://github.com/mondaycom/monday-api-python-sdk",  # Optional
     author="Michael Imas",
     author_email="michaelim@monday.com",
-    license_files = ('LICENSE',),
+    license_files=("LICENSE",),
     classifiers=[  # Optional
         # How mature is this project? Common values are
         #   3 - Alpha

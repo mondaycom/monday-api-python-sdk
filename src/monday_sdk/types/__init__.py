@@ -12,4 +12,5 @@ from .api_response_types import (
     ActivityLog,
     User,
 )
-from .monday_enums import BoardKind, BoardState, BoardsOrderBy, ColumnType, Operator
+from .monday_enums import BoardKind, BoardState, BoardsOrderBy, Operator
+from .client_settings import MondayClientSettings
