@@ -20,14 +20,33 @@ def extract_column_value_by_title(item: Item, column_name: str) -> Union[str, bo
     return ""
 
 
+def extract_column_value_by_id(item: Item, column_id: str) -> Union[str, bool]:
+    item_column_values = item.column_values
+    for column_value in item_column_values:
+        if column_value.column.id == column_id:
+            if column_value.type == "checkbox":
+                # Parse the JSON string into a dictionary
+                value_dict = json.loads(column_value.value)
+                return value_dict["checked"]
+            else:
+                return column_value.text
+    return ""
+
+
+def extract_column_id_by_title(item: Item, column_name: str) -> Union[str, None]:
+    item_column_values = item.column_values
+    for column_value in item_column_values:
+        if column_value.column.title == column_name:
+            return column_value.column.id
+    return None
+
+
 def monday_json_stringify(value):
     # Monday's required format: "{\"label\":\"Done\"}"
     return json.dumps(json.dumps(value))
 
 
-def gather_params(
-    params: Iterable[Tuple[str, Any]], excluded_params: Optional[List[str]] = None, exclude_none: bool = True
-) -> str:
+def gather_params(params: Iterable[Tuple[str, Any]], excluded_params: Optional[List[str]] = None, exclude_none: bool = True) -> str:
     valid_params = [
         f"{param}: {format_param_value(value)}"
         for param, value in params
