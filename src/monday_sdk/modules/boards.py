@@ -40,11 +40,7 @@ class BoardModule(MondayGraphQL):
         while True:
             query = get_board_items_query(board_id, query_params=query_params, cursor=cursor, limit=limit)
             response = self.execute(query)
-
-            try:
-                items_page = response.data.boards[0].items_page if cursor is None else response.data.next_items_page
-            except IndexError:
-                raise Exception(f"Board {board_id} not found, make sure it's not private, response: {response}")
+            items_page = response.data.boards[0].items_page if cursor is None else response.data.next_items_page
 
             items.extend(items_page.items)
             complexity = response.data.complexity.query
