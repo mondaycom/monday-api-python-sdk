@@ -15,7 +15,7 @@ long_description = (here / "README.md").read_text(encoding="utf-8")
 
 setup(
     name="monday-api-python-sdk",  # Required
-    version="1.1.1",  # Required
+    version="1.1.2",  # Required
     description="A Python SDK for interacting with Monday's GraphQL API",  # Optional
     long_description=long_description,  # Optional
     long_description_content_type="text/markdown",  # Optional (see note above)
