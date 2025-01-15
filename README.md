@@ -102,21 +102,11 @@ The SDK provides structured types to help you work with API responses more effec
 
 Here is an example of how to use these types with the SDK to deserialize API responses:
 ```python
-from monday_sdk import MondayClient, MondayApiResponse
-import dacite
+from monday_sdk import MondayClient
 
 client = MondayClient(token="your_token")
-
-# Fetch the raw response data
-response_data = client.boards.fetch_all_items_by_board_id(board_id="your_board_id")
-
-# Deserialize the response data into typed objects
-monday_response = dacite.from_dict(data_class=MondayApiResponse, data=response_data)
-
-# Access specific fields using the deserialized objects
-first_board = monday_response.data.boards[0]
-first_item_name = first_board.items_page.items[0].name
-
+items = client.boards.fetch_all_items_by_board_id(board_id="your_board_id")
+first_item_name = items[0].name
 print(f"First item name: {first_item_name}")
 ```
 By using these types, you can ensure type safety and better code completion support in your IDE, making your work with the Monday API more efficient and error-free.
