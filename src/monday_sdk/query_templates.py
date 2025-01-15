@@ -552,6 +552,7 @@ def get_updates_for_board(board_id, limit: int, page=1):
                 id,
                 text_body,
                 item_id,
+                updated_at,
                 created_at,
                 creator {
                     name,
