@@ -46,6 +46,7 @@ class Update:
     text_body: Optional[str] = field(default=None)
     item_id: Optional[str] = field(default=None)
     created_at: Optional[str] = field(default=None)
+    updated_at: Optional[str] = field(default=None)
     creator: Optional[User] = field(default=None)
 
 
