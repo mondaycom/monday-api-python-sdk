@@ -87,6 +87,7 @@ class Data:
     boards: Optional[List[Board]] = field(default_factory=list)
     items: Optional[List[Item]] = field(default_factory=list)
     next_items_page: Optional[ItemsPage] = field(default=None)
+    items_page_by_column_values: Optional[ItemsPage] = field(default=None)
 
 
 @dataclass
