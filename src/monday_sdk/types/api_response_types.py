@@ -35,6 +35,11 @@ class Item:
 
 
 @dataclass
+class CreatedItem:
+    id: Optional[str] = field(default=None)
+
+
+@dataclass
 class User:
     name: Optional[str] = field(default=None)
     id: Optional[str] = field(default=None)
@@ -88,6 +93,7 @@ class Data:
     items: Optional[List[Item]] = field(default_factory=list)
     next_items_page: Optional[ItemsPage] = field(default=None)
     items_page_by_column_values: Optional[ItemsPage] = field(default=None)
+    create_item: Optional[CreatedItem] = field(default=None)
 
 
 @dataclass
