@@ -42,7 +42,7 @@ column_values = {
     "text_column_id": "Important task" # Replace with your actual text column ID and value
 }
 
-item = client.create_item(
+item = client.items.create_item(
     board_id="your_board_id", 
     group_id="your_group_id", 
     item_name="New Item", 
