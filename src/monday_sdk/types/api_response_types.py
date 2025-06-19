@@ -6,6 +6,7 @@ from typing import Optional, List
 class Column:
     id: Optional[str] = field(default=None)
     title: Optional[str] = field(default=None)
+    type: Optional[str] = field(default=None)
 
 
 @dataclass
@@ -80,10 +81,13 @@ class ActivityLog:
 
 @dataclass
 class Board:
+    id: Optional[str] = field(default=None)
     name: Optional[str] = field(default=None)
     items_page: Optional[ItemsPage] = field(default=None)
     updates: Optional[List[Update]] = field(default_factory=list)
     activity_logs: Optional[List[ActivityLog]] = field(default_factory=list)
+    columns: Optional[List[Column]] = field(default_factory=list)
+    groups: Optional[List[Group]] = field(default_factory=list)
 
 
 @dataclass
