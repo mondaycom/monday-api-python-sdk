@@ -15,6 +15,8 @@ def extract_column_value_by_title(item: Item, column_name: str) -> Union[str, bo
                 # Parse the JSON string into a dictionary
                 value_dict = json.loads(column_value.value)
                 return value_dict["checked"]
+            elif column_value.type in ["mirror", "board_relation", "dependency"]:
+                return column_value.display_value or ""
             else:
                 return column_value.text
     return ""
@@ -28,6 +30,8 @@ def extract_column_value_by_id(item: Item, column_id: str) -> Union[str, bool]:
                 # Parse the JSON string into a dictionary
                 value_dict = json.loads(column_value.value)
                 return value_dict["checked"]
+            elif column_value.type in ["mirror", "board_relation", "dependency"]:
+                return column_value.display_value or ""
             else:
                 return column_value.text
     return ""

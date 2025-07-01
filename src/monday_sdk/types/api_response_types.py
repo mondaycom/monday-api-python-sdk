@@ -14,6 +14,7 @@ class ColumnValue:
     text: Optional[str] = field(default=None)
     type: Optional[str] = field(default=None)
     column: Optional[Column] = field(default=None)
+    display_value: Optional[str] = field(default=None)
 
 
 @dataclass
