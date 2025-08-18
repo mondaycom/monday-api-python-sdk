@@ -1,5 +1,5 @@
 from .types import MondayClientSettings
-from .modules import BoardModule, ItemModule, UpdateModule, CustomModule, ActivityLogModule
+from .modules import BoardModule, ItemModule, UpdateModule, CustomModule, ActivityLogModule, DocsModule
 from .constants import API_VERSION, DEFAULT_MAX_RETRY_ATTEMPTS
 
 BASE_HEADERS = {"API-Version": API_VERSION}
@@ -16,3 +16,4 @@ class MondayClient:
         self.updates = UpdateModule(self.settings)
         self.activity_logs = ActivityLogModule(self.settings)
         self.custom = CustomModule(self.settings)
+        self.docs = DocsModule(self.settings)

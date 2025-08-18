@@ -742,3 +742,47 @@ def get_activity_logs_query(
     )
 
     return query
+
+
+def get_docs_query(object_id: str, page: int = 1) -> str:
+    """
+    Get docs query for a specific object_id with pagination support.
+    
+    Args:
+        object_id: The object ID to fetch docs for
+        page: Page number to fetch (default: 1)
+    
+    Returns:
+        GraphQL query string
+    """
+    query = """query {
+        docs (object_ids: %s, page: %s) {
+            id
+            created_at
+            created_by {
+                id
+                name
+            }
+            doc_folder_id
+            doc_kind
+            name
+            url
+            workspace {
+                name
+            }
+            workspace_id
+            object_id
+            settings
+            blocks {
+                type
+                content
+                position
+                updated_at
+            }
+        }
+    }""" % (
+        object_id,
+        page,
+    )
+
+    return query
