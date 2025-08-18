@@ -5,7 +5,9 @@ from ..types import MondayApiResponse, Document
 from ..graphql_handler import MondayGraphQL
 
 
-class DocsModule(MondayGraphQL):
+class DocsModule:
+    def __init__(self, graphql_client: MondayGraphQL):
+        self.client = graphql_client
     def get_document_with_blocks(self, doc_id: str) -> Optional[Document]:
         """
         Get document with all its blocks for a specific document ID.
@@ -22,7 +24,7 @@ class DocsModule(MondayGraphQL):
         
         while True:
             query = get_docs_query(doc_id, page=page)
-            response: MondayApiResponse = self.execute(query)
+            response: MondayApiResponse = self.client.execute(query)
             
             # Check if we have docs in the response
             if not response.data.docs:

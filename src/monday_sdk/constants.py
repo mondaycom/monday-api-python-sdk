@@ -2,7 +2,6 @@ API_URL = "https://api.monday.com/v2"
 API_VERSION = "2025-07"
 TOKEN_HEADER = "Authorization"
 MAX_COMPLEXITY = 10000000  # Monday's API complexity limit per minute
-BASE_HEADERS = {"API-Version": API_VERSION}
 
 DEFAULT_MAX_RETRY_ATTEMPTS = 4
 DEFAULT_PAGE_LIMIT_ITEMS = 500
