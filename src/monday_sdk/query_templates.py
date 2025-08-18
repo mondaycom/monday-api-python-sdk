@@ -756,6 +756,10 @@ def get_docs_query(object_id: str, page: int = 1) -> str:
         GraphQL query string
     """
     query = """query {
+        complexity {
+            query
+            after
+        }
         docs (object_ids: %s, page: %s) {
             id
             created_at

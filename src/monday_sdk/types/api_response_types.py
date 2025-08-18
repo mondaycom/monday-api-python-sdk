@@ -134,4 +134,4 @@ class Data:
 @dataclass
 class MondayApiResponse:
     data: Data
-    account_id: int
+    account_id: Optional[int] = field(default=None)
