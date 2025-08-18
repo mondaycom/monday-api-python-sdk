@@ -3,9 +3,9 @@ import requests
 import json
 import time
 
-from .exceptions import MondayQueryError
-from .constants import API_URL, TOKEN_HEADER
-from .types import MondayApiResponse, MondayClientSettings
+from common.helpers.monday_api.exceptions import MondayQueryError # type: ignore
+from common.helpers.monday_api.settings import API_URL, DEBUG_MODE, TOKEN_HEADER, MAX_RETRY_ATTEMPTS # type: ignore
+from common.helpers.monday_api.types import MondayApiResponse # type: ignore
 
 
 class MondayGraphQL:
@@ -13,12 +13,11 @@ class MondayGraphQL:
     GraphQL client that handles API interactions, response serialization, and error handling.
     """
 
-    def __init__(self, settings: MondayClientSettings):
+    def __init__(self, token: str, headers: dict):
         self.endpoint = API_URL
-        self.token = settings.token
-        self.headers = settings.headers
-        self.debug_mode = settings.debug_mode
-        self.max_retry_attempts = settings.max_retry_attempts
+        self.token = token
+        self.headers = headers
+        self.debug_mode = DEBUG_MODE
 
     def execute(self, query: str) -> MondayApiResponse:
         """
@@ -31,8 +30,10 @@ class MondayGraphQL:
             MondayApiResponse: The deserialized response from the Monday API.
         """
         current_attempt = 0
+        last_error = None
+        last_status_code = None
 
-        while current_attempt < self.max_retry_attempts:
+        while current_attempt < MAX_RETRY_ATTEMPTS:
 
             if self.debug_mode:
                 print(f"[debug_mode] about to execute query: {query}")
@@ -71,7 +72,29 @@ class MondayGraphQL:
 
             except (requests.HTTPError, json.JSONDecodeError, MondayQueryError) as e:
                 print(f"Error while executing query: {e}")
+                last_error = e
+                if hasattr(e, 'response') and e.response is not None:
+                    last_status_code = e.response.status_code
                 current_attempt += 1
+
+        # All retries exhausted - raise appropriate error based on the last failure
+        if last_status_code == 504:
+            raise Exception(
+                f"Monday API server encountered an internal error (HTTP 504 Gateway Timeout) "
+                f"for {MAX_RETRY_ATTEMPTS} consecutive attempts. The server was unable to process "
+                f"the request within the timeout period. Please try again later or contact support "
+                f"if the issue persists."
+            )
+        elif last_status_code is not None:
+            raise Exception(
+                f"Monday API request failed with HTTP {last_status_code} after {MAX_RETRY_ATTEMPTS} attempts. "
+                f"Error: {str(last_error)}"
+            )
+        else:
+            raise Exception(
+                f"Monday API request failed after {MAX_RETRY_ATTEMPTS} attempts. "
+                f"Error: {str(last_error)}"
+            )
 
     def _send(self, query: str):
         payload = {"query": query}
