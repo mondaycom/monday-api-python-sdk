@@ -760,7 +760,7 @@ def get_docs_query(object_id: str, page: int = 1) -> str:
             query
             after
         }
-        docs (object_ids: %s, page: %s) {
+        docs (object_ids: %s) {
             id
             created_at
             created_by {
@@ -777,7 +777,7 @@ def get_docs_query(object_id: str, page: int = 1) -> str:
             workspace_id
             object_id
             settings
-            blocks {
+            blocks (page: %s) {
                 type
                 content
                 position
