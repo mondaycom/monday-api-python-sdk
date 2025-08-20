@@ -56,7 +56,7 @@ class Workspace:
 class DocumentBlock:
     type: Optional[str] = field(default=None)
     content: Optional[str] = field(default=None)
-    position: Optional[int] = field(default=None)
+    position: Optional[float] = field(default=None)
     updated_at: Optional[str] = field(default=None)
 
 
