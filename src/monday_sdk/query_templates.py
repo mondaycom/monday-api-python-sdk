@@ -782,6 +782,8 @@ def get_docs_query(object_id: str, page: int = 1) -> str:
                 content
                 position
                 updated_at
+                id
+                parent_block_id
             }
         }
     }""" % (

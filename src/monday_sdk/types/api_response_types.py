@@ -58,6 +58,8 @@ class DocumentBlock:
     content: Optional[str] = field(default=None)
     position: Optional[float] = field(default=None)
     updated_at: Optional[str] = field(default=None)
+    id: Optional[str] = field(default=None)
+    parent_block_id: Optional[str] = field(default=None)
 
 
 @dataclass
