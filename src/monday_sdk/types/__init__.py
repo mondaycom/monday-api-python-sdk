@@ -11,6 +11,8 @@ from .api_response_types import (
     Update,
     ActivityLog,
     User,
+    Workspace,
+    DocumentBlock,
+    Document,
 )
 from .monday_enums import BoardKind, BoardState, BoardsOrderBy, Operator
-from .client_settings import MondayClientSettings

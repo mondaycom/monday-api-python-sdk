@@ -5,7 +5,9 @@ from ..constants import DEFAULT_PAGE_LIMIT_ACTIVITY_LOGS
 from typing import Optional, Union, List
 
 
-class ActivityLogModule(MondayGraphQL):
+class ActivityLogModule:
+    def __init__(self, graphql_client: MondayGraphQL):
+        self.client = graphql_client
 
     def fetch_activity_logs_from_board(
         self,
@@ -16,7 +18,7 @@ class ActivityLogModule(MondayGraphQL):
         to_date: Optional[str] = None,
     ) -> MondayApiResponse:
         query = get_activity_logs_query(board_ids, limit, page, from_date, to_date)
-        return self.execute(query)
+        return self.client.execute(query)
 
     def fetch_all_activity_logs_from_board(
         self,

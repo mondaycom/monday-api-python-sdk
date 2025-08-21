@@ -6,7 +6,9 @@ from ..query_templates import create_item_query, get_item_query, change_column_v
 from ..types import Item
 
 
-class ItemModule(MondayGraphQL):
+class ItemModule:
+    def __init__(self, graphql_client: MondayGraphQL):
+        self.client = graphql_client
     """ "
     todo: add types for this module
     """
@@ -21,13 +23,13 @@ class ItemModule(MondayGraphQL):
         for other columns, use this method, for example, for checkbox columns pass {'checked': True}
         """
         query = change_column_value_query(board_id, item_id, column_id, value)
-        return self.execute(query)
+        return self.client.execute(query)
 
     def change_simple_column_value(
         self, board_id: Union[str, int], item_id: Union[str, int], column_id: str, value: str
     ):
         query = change_simple_column_value_query(board_id, item_id, column_id, value)
-        return self.execute(query)
+        return self.client.execute(query)
 
     def change_status_column_value(
         self, board_id: Union[str, int], item_id: Union[str, int], column_id: str, value: str
@@ -50,7 +52,7 @@ class ItemModule(MondayGraphQL):
         create_labels_if_missing=False,
     ):
         query = create_item_query(board_id, group_id, item_name, column_values, create_labels_if_missing)
-        return self.execute(query)
+        return self.client.execute(query)
 
     def create_subitem(
         self,
@@ -60,13 +62,13 @@ class ItemModule(MondayGraphQL):
         create_labels_if_missing=False,
     ):
         query = create_subitem_query(parent_item_id, subitem_name, column_values, create_labels_if_missing)
-        return self.execute(query)
+        return self.client.execute(query)
 
     def fetch_items_by_column_value(
         self, board_id: Union[str, int], column_id: str, value: str, limit: int = None, cursor: str = None
     ):
         query = get_item_query(board_id, column_id, value, limit, cursor)
-        return self.execute(query)
+        return self.client.execute(query)
 
     def fetch_items_by_id(self, ids: Union[str, int, List[Union[str, int]]]) -> List[Item]:
         if isinstance(ids, (list, set)):
@@ -75,7 +77,7 @@ class ItemModule(MondayGraphQL):
         else:
             ids_str = str(ids)
         query = get_item_by_id_query(ids_str)
-        response = self.execute(query)
+        response = self.client.execute(query)
         return response.data.items
 
     def change_multiple_column_values(
@@ -86,16 +88,16 @@ class ItemModule(MondayGraphQL):
         create_labels_if_missing: bool = False,
     ):
         query = update_multiple_column_values_query(board_id, item_id, column_values, create_labels_if_missing)
-        return self.execute(query)
+        return self.client.execute(query)
 
     def move_item_to_group(self, item_id: Union[str, int], group_id: Union[str, int]):
         query = move_item_to_group_query(item_id, group_id)
-        return self.execute(query)
+        return self.client.execute(query)
 
     def archive_item_by_id(self, item_id: Union[str, int]):
         query = archive_item_query(item_id)
-        return self.execute(query)
+        return self.client.execute(query)
 
     def delete_item_by_id(self, item_id: Union[str, int]):
         query = delete_item_query(item_id)
-        return self.execute(query)
+        return self.client.execute(query)
