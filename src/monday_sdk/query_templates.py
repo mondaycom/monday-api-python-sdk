@@ -484,7 +484,7 @@ def create_update_query(item_id, update_value):
             }
         }""" % (
         item_id,
-        json.dumps(update_value),
+        json.dumps(update_value, ensure_ascii=False),
     )
 
     return query
