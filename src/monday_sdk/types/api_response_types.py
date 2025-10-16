@@ -48,6 +48,37 @@ class User:
 
 
 @dataclass
+class Workspace:
+    name: Optional[str] = field(default=None)
+
+
+@dataclass
+class DocumentBlock:
+    type: Optional[str] = field(default=None)
+    content: Optional[str] = field(default=None)
+    position: Optional[float] = field(default=None)
+    updated_at: Optional[str] = field(default=None)
+    id: Optional[str] = field(default=None)
+    parent_block_id: Optional[str] = field(default=None)
+
+
+@dataclass
+class Document:
+    id: Optional[str] = field(default=None)
+    created_at: Optional[str] = field(default=None)
+    created_by: Optional[User] = field(default=None)
+    doc_folder_id: Optional[str] = field(default=None)
+    doc_kind: Optional[str] = field(default=None)
+    name: Optional[str] = field(default=None)
+    url: Optional[str] = field(default=None)
+    workspace: Optional[Workspace] = field(default=None)
+    workspace_id: Optional[str] = field(default=None)
+    object_id: Optional[str] = field(default=None)
+    settings: Optional[str] = field(default=None)
+    blocks: Optional[List[DocumentBlock]] = field(default_factory=list)
+
+
+@dataclass
 class Update:
     id: Optional[str] = field(default=None)
     text_body: Optional[str] = field(default=None)
@@ -99,9 +130,10 @@ class Data:
     next_items_page: Optional[ItemsPage] = field(default=None)
     items_page_by_column_values: Optional[ItemsPage] = field(default=None)
     create_item: Optional[CreatedItem] = field(default=None)
+    docs: Optional[List[Document]] = field(default_factory=list)
 
 
 @dataclass
 class MondayApiResponse:
     data: Data
-    account_id: int
+    account_id: Optional[int] = field(default=None)
