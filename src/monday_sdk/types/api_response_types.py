@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 
 
 @dataclass
@@ -105,3 +105,4 @@ class Data:
 class MondayApiResponse:
     data: Data
     account_id: int
+    raw_response: Optional[Dict[str, Any]] = field(default=None)
