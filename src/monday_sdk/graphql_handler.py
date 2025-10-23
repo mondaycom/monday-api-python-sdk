@@ -64,6 +64,8 @@ class MondayGraphQL:
                     raise MondayQueryError(response_data["errors"][0]["message"], response_data["errors"])
 
                 try:
+                    # Store the raw response before deserialization
+                    response_data["response_data"] = response_data.copy()
                     serialized_result = dacite.from_dict(data_class=MondayApiResponse, data=response_data)
                     return serialized_result
 
