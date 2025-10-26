@@ -7,7 +7,9 @@ from ..utils import sleep_according_to_complexity, construct_updated_at_query_pa
 from ..constants import DEFAULT_PAGE_LIMIT_BOARDS, DEFAULT_PAGE_LIMIT_ITEMS
 
 
-class BoardModule(MondayGraphQL):
+class BoardModule:
+    def __init__(self, graphql_client: MondayGraphQL):
+        self.client = graphql_client
     def fetch_boards(
         self,
         limit: Optional[int] = DEFAULT_PAGE_LIMIT_BOARDS,
@@ -18,11 +20,11 @@ class BoardModule(MondayGraphQL):
         order_by: Optional[BoardsOrderBy] = None,
     ) -> MondayApiResponse:
         query = get_boards_query(ids=ids, limit=limit, page=page, board_kind=board_kind, state=state, order_by=order_by)
-        return self.execute(query)
+        return self.client.execute(query)
 
     def fetch_boards_by_id(self, board_id: Union[int, str]) -> MondayApiResponse:
         query = get_board_by_id_query(board_id)
-        return self.execute(query)
+        return self.client.execute(query)
 
     def fetch_all_items_by_board_id(
         self,
@@ -39,7 +41,7 @@ class BoardModule(MondayGraphQL):
 
         while True:
             query = get_board_items_query(board_id, query_params=query_params, cursor=cursor, limit=limit)
-            response = self.execute(query)
+            response = self.client.execute(query)
             items_page = response.data.boards[0].items_page if cursor is None else response.data.next_items_page
 
             items.extend(items_page.items)
@@ -73,4 +75,4 @@ class BoardModule(MondayGraphQL):
 
     def fetch_columns_by_board_id(self, board_id: Union[int, str]) -> MondayApiResponse:
         query = get_columns_by_board_query(board_id)
-        return self.execute(query)
+        return self.client.execute(query)
