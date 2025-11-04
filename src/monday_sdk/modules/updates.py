@@ -43,7 +43,8 @@ class UpdateModule:
         """
         Fetches all updates from a board (with optional date filtering).
         - Paginates through all pages until no more updates.
-        - If from_date or to_date are provided, filters out updates outside that window.
+        - Uses API-level date filtering (requires API version 2026-01+) when dates are provided.
+        - Also applies client-side filtering as additional safety/fallback.
         """
         start_dt = datetime.fromisoformat(updated_after) if updated_after else None
         end_dt = datetime.fromisoformat(updated_before) if updated_before else None
@@ -52,7 +53,12 @@ class UpdateModule:
         page = 1
 
         while True:
-            updates = self.fetch_board_updates_page(board_ids, page=page)
+            updates = self.fetch_board_updates_page(
+                board_ids, 
+                page=page, 
+                from_date=updated_after, 
+                to_date=updated_before
+            )
             if not updates:
                 break
 
