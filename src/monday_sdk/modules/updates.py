@@ -8,8 +8,9 @@ from ..graphql_handler import MondayGraphQL
 class UpdateModule:
     def __init__(self, graphql_client: MondayGraphQL):
         self.client = graphql_client
-    def create_update(self, item_id, update_value) -> MondayApiResponse:
-        query = create_update_query(item_id, update_value)
+    def create_update(self, item_id, update_value, mentions_list: Optional[List[UpdateMentions]]) -> MondayApiResponse:
+        mentions_str = self._convert_mentions_to_graphql(mentions_list)
+        query = create_update_query(item_id, update_value, mentions_str)
         return self.client.execute(query)
 
     def delete_update(self, item_id) -> MondayApiResponse:
@@ -107,3 +108,24 @@ class UpdateModule:
             provides client-side date filtering.
         """
         return self.fetch_board_updates_page(board_id, limit, page, from_date, to_date)
+
+    def _convert_mentions_to_graphql(self, mentions_list: Optional[List[UpdateMentions]]):
+        """Convert a Python list of mention dictionaries to GraphQL format string.
+
+        Args:
+            mentions_list: Optional[List[UpdateMentions]]
+            Example: [{"id": 60875578, "type": "User"}]
+
+        Returns:
+            GraphQL formatted string: "[{id: 60875578, type: User}]"
+        """
+        if not mentions_list or not isinstance(mentions_list, list):
+            return "[]"
+
+        mention_strings = []
+        for mention in mentions_list:
+            # Build the mention string with unquoted keys and enum type
+            mention_str = f"{{id: {mention['id']}, type: {mention['type']}}}"
+            mention_strings.append(mention_str)
+
+        return f"[{', '.join(mention_strings)}]"
