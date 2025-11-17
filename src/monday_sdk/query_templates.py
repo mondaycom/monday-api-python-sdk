@@ -473,18 +473,20 @@ def update_multiple_column_values_query(board_id, item_id, column_values, create
 
 
 # UPDATE RESOURCE QUERIES
-def create_update_query(item_id, update_value):
+def create_update_query(item_id, update_value, mentions: str):
     query = """mutation
         {
             create_update(
                 item_id: %s,
-                body: %s
+                body: %s,
+                mentions_list: %s
             ) {
                 id
             }
         }""" % (
         item_id,
         json.dumps(update_value, ensure_ascii=False),
+        mentions
     )
 
     return query
