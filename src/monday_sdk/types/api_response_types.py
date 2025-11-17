@@ -66,6 +66,7 @@ class DocumentBlock:
 class Document:
     id: Optional[str] = field(default=None)
     created_at: Optional[str] = field(default=None)
+    updated_at: Optional[str] = field(default=None)
     created_by: Optional[User] = field(default=None)
     doc_folder_id: Optional[str] = field(default=None)
     doc_kind: Optional[str] = field(default=None)
