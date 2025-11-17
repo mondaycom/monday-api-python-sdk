@@ -770,6 +770,7 @@ def get_docs_query(object_id: str, page: int = 1) -> str:
         docs (object_ids: %s) {
             id
             created_at
+            updated_at
             created_by {
                 id
                 name
