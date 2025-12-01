@@ -35,6 +35,7 @@ def get_board_items_first_page_query(
       }
         boards(ids: %s){
             name
+            updated_at
             items_page %s {
                 cursor
                 items {

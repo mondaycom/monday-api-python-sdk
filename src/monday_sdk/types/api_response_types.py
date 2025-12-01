@@ -116,6 +116,7 @@ class ActivityLog:
 class Board:
     id: Optional[str] = field(default=None)
     name: Optional[str] = field(default=None)
+    updated_at: Optional[str] = field(default=None)
     items_page: Optional[ItemsPage] = field(default=None)
     updates: Optional[List[Update]] = field(default_factory=list)
     activity_logs: Optional[List[ActivityLog]] = field(default_factory=list)
