@@ -41,6 +41,7 @@ def get_board_items_first_page_query(
                 items {
                     id
                     name
+                    updated_at
                     group {
                         id
                         title
@@ -66,6 +67,7 @@ def get_board_items_first_page_query(
                     subitems {
                       name
                       id
+                      updated_at
                       parent_item {
                         id
                       }
@@ -113,6 +115,7 @@ def get_board_items_pagination_query(cursor: str, limit: int) -> str:
             items {
                 id
                 name
+                updated_at
                 group {
                     id
                     title
@@ -138,6 +141,7 @@ def get_board_items_pagination_query(cursor: str, limit: int) -> str:
                 subitems {
                   name
                   id
+                  updated_at
                   group {
                     id
                     title
