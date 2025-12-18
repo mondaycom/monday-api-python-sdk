@@ -1,10 +1,12 @@
 import dacite
+import mimetypes
+import os
 import requests
 import json
 import time
 
-from .constants import API_URL, TOKEN_HEADER, DEFAULT_MAX_RETRY_ATTEMPTS
-from .types import MondayApiResponse
+from .constants import API_URL, FILE_UPLOAD_URL, TOKEN_HEADER, DEFAULT_MAX_RETRY_ATTEMPTS
+from .types import MondayApiResponse, FileInput
 from .exceptions import MondayQueryError
 
 
@@ -107,3 +109,52 @@ class MondayGraphQL:
             headers[TOKEN_HEADER] = self.token
 
         return requests.request("POST", self.endpoint, headers=headers, json=payload)
+
+    def execute_multipart(self, query: str, file: FileInput) -> dict:
+        """
+        Execute a GraphQL mutation using multipart/form-data.
+
+        Used for mutations that require file uploads (e.g., add_file_to_column,
+        add_file_to_update). This follows the GraphQL multipart request specification.
+
+        Args:
+            query: The GraphQL mutation string (must accept a File! variable)
+            file: FileInput containing file details (name, path, optional filename/mimetype)
+
+        Returns:
+            The API response as a dictionary
+
+        Raises:
+            requests.HTTPError: If the API request fails
+        """
+        filename = file.filename or os.path.basename(file.file_path)
+        file_mimetype = file.mimetype
+        if file_mimetype is None:
+            file_mimetype, _ = mimetypes.guess_type(file.file_path)
+            file_mimetype = file_mimetype or 'application/octet-stream'
+
+        if self.debug_mode:
+            print(f"[debug_mode] executing multipart mutation with file: {filename}, mimetype: {file_mimetype}")
+
+        with open(file.file_path, 'rb') as f:
+            # Following the GraphQL multipart request spec
+            payload = {
+                'query': query,
+                'map': json.dumps({file.name: [f"variables.{file.name}"]})
+            }
+            files = [
+                (file.name, (filename, f, file_mimetype))
+            ]
+
+            response = requests.post(
+                FILE_UPLOAD_URL,
+                headers={TOKEN_HEADER: self.token},
+                data=payload,
+                files=files,
+            )
+
+        if self.debug_mode:
+            print(f"[debug_mode] multipart response: {response.status_code}, {response.text}")
+
+        response.raise_for_status()
+        return response.json()

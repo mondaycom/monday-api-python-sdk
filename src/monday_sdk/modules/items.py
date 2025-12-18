@@ -1,7 +1,9 @@
-from typing import Union, Dict, Any, List
+from typing import Union, Dict, Any, List, Optional
 import datetime
+import os
 
 from ..graphql_handler import MondayGraphQL
+from ..types import FileInput
 from ..query_templates import create_item_query, get_item_query, change_column_value_query, get_item_by_id_query, update_multiple_column_values_query, create_subitem_query, delete_item_query, archive_item_query, move_item_to_group_query, change_simple_column_value_query
 from ..types import Item
 
@@ -101,3 +103,51 @@ class ItemModule:
     def delete_item_by_id(self, item_id: Union[str, int]):
         query = delete_item_query(item_id)
         return self.client.execute(query)
+
+    def upload_file_to_column(
+        self,
+        item_id: Union[str, int],
+        column_id: str,
+        file_path: str,
+        mimetype: Optional[str] = None,
+    ) -> dict:
+        """
+        Upload a file to a file column on an item.
+
+        Note: Unlike other column methods, this uses a different API endpoint
+        (https://api.monday.com/v2/file) and does not require board_id.
+
+        Args:
+            item_id: The ID of the item to add the file to
+            column_id: The ID of the file column
+            file_path: Path to the file to upload
+            mimetype: Optional MIME type (e.g., 'audio/mpeg', 'video/mp4').
+                      If not provided, will be auto-detected from the file extension.
+
+        Returns:
+            The API response containing the uploaded asset info
+
+        Raises:
+            FileNotFoundError: If the file doesn't exist
+            requests.HTTPError: If the API request fails
+        """
+        if not os.path.exists(file_path):
+            raise FileNotFoundError(f"File not found: {file_path}")
+
+        mutation = '''mutation ($file: File!) {
+            add_file_to_column(item_id: %s, column_id: "%s", file: $file) {
+                id
+                name
+                url
+                file_extension
+                file_size
+            }
+        }''' % (item_id, column_id)
+
+        file_input = FileInput(
+            name="file",
+            file_path=file_path,
+            mimetype=mimetype,
+        )
+
+        return self.client.execute_multipart(mutation, file_input)

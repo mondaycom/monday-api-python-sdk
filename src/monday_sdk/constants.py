@@ -1,4 +1,5 @@
 API_URL = "https://api.monday.com/v2"
+FILE_UPLOAD_URL = "https://api.monday.com/v2/file"
 API_VERSION = "2026-01"
 TOKEN_HEADER = "Authorization"
 MAX_COMPLEXITY = 10000000  # Monday's API complexity limit per minute
