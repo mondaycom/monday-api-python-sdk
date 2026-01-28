@@ -2,14 +2,16 @@ from typing import List, Optional, Union, Any, Mapping
 
 from ..graphql_handler import MondayGraphQL
 from ..query_templates import get_boards_query, get_board_by_id_query, get_board_items_query, get_columns_by_board_query
-from ..types import MondayApiResponse, Item, ItemsPage, BoardKind, BoardState, BoardsOrderBy
+from ..types import MondayApiResponse, Item, ItemsPage, BoardKind, BoardState, BoardsOrderBy, Operator
 from ..utils import sleep_according_to_complexity, construct_updated_at_query_params
 from ..constants import DEFAULT_PAGE_LIMIT_BOARDS, DEFAULT_PAGE_LIMIT_ITEMS
+from ..exceptions import MondayQueryError
 
 
 class BoardModule:
     def __init__(self, graphql_client: MondayGraphQL):
         self.client = graphql_client
+
     def fetch_boards(
         self,
         limit: Optional[int] = DEFAULT_PAGE_LIMIT_BOARDS,
@@ -54,6 +56,92 @@ class BoardModule:
                 break
 
         return items
+
+    def fetch_all_items_by_board_id_large_board(
+        self,
+        board_id: Union[int, str],
+        query_params: Optional[Mapping[str, Any]] = None,
+        limit: Optional[int] = DEFAULT_PAGE_LIMIT_ITEMS,
+    ) -> List[Item]:
+        """
+        Fetches all items from a board by board ID, with cursor expiration handling.
+        Uses updated_at tracking to recover from CursorExpiredError and continue fetching.
+        Suitable for large boards where cursor might expire during pagination.
+
+        When a cursor expires, the function rebuilds the query using the last known
+        updated_at timestamp to continue from where it left off.
+
+        Note: Custom order_by in query_params is not supported. This function always
+        orders by __last_updated__ ascending to ensure correct cursor recovery.
+        """
+        items: List[Item] = []
+        cursor = None
+        last_updated_at: Optional[str] = None
+
+        while True:
+            # Build query params with updated_at filter if recovering from cursor expiration
+            effective_query_params = self._merge_query_params_with_updated_at(query_params, last_updated_at)
+
+            try:
+                query = get_board_items_query(board_id, query_params=effective_query_params, cursor=cursor, limit=limit)
+                response = self.client.execute(query)
+                items_page = response.data.boards[0].items_page if cursor is None else response.data.next_items_page
+
+                # Track the last updated_at for potential recovery
+                if items_page.items:
+                    last_updated_at = items_page.items[-1].updated_at
+
+                items.extend(items_page.items)
+                complexity = response.data.complexity.query
+                cursor = items_page.cursor
+
+                if cursor:
+                    sleep_according_to_complexity(complexity)
+                else:
+                    break
+
+            except MondayQueryError as e:
+                if "CursorExpiredError" in str(e):
+                    # Cursor expired - reset cursor and use updated_at filter to continue
+                    print(f"Cursor expired - resetting cursor and using updated_at filter to continue")
+                    cursor = None
+                    # last_updated_at is already set from the last successful batch
+                    continue
+                raise  # Re-raise if it's a different error
+
+        return items
+
+    def _merge_query_params_with_updated_at(
+        self,
+        query_params: Optional[Mapping[str, Any]],
+        updated_after: Optional[str],
+    ) -> Mapping[str, Any]:
+        """
+        Merges existing query_params with an updated_at filter and order_by clause.
+        Always includes order_by to sort by updated_at ascending.
+        If updated_after is provided, adds a filter to fetch items updated after that timestamp.
+        """
+        order_by = [{"column_id": "__last_updated__", "direction": "asc"}]
+
+        if query_params is None:
+            merged_params: dict = {"order_by": order_by}
+        else:
+            # Create a new dict to avoid mutating the original
+            merged_params = dict(query_params)
+            merged_params["order_by"] = order_by
+
+        if updated_after is not None:
+            updated_at_rule = {
+                "column_id": "__last_updated__",
+                "compare_value": ["EXACT", updated_after],
+                "operator": Operator.GREATER_THAN_OR_EQUALS,
+                "compare_attribute": "UPDATED_AT",
+            }
+            existing_rules = list(merged_params.get("rules", []))
+            existing_rules.append(updated_at_rule)
+            merged_params["rules"] = existing_rules
+
+        return merged_params
 
     def fetch_item_by_board_id_by_update_date(
         self,
