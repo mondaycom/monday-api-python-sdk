@@ -2,10 +2,14 @@ from typing import List, Optional, Union, Any, Mapping
 
 from ..graphql_handler import MondayGraphQL
 from ..query_templates import get_boards_query, get_board_by_id_query, get_board_items_query, get_columns_by_board_query
-from ..types import MondayApiResponse, Item, ItemsPage, BoardKind, BoardState, BoardsOrderBy, Operator
+from ..types import MondayApiResponse, Item, BoardKind, BoardState, BoardsOrderBy, Operator, ItemsOrderByDirection
 from ..utils import sleep_according_to_complexity, construct_updated_at_query_params
 from ..constants import DEFAULT_PAGE_LIMIT_BOARDS, DEFAULT_PAGE_LIMIT_ITEMS
-from ..exceptions import MondayQueryError
+
+
+def is_cursor_expired_error(error: Exception) -> bool:
+    """Check if the exception is a CursorExpiredError."""
+    return "CursorExpiredError" in str(error)
 
 
 class BoardModule:
@@ -77,11 +81,13 @@ class BoardModule:
         items: List[Item] = []
         cursor = None
         last_updated_at: Optional[str] = None
-
+        last_updated_at_to_use = None
+        page = 0
         while True:
             # Build query params with updated_at filter if recovering from cursor expiration
-            effective_query_params = self._merge_query_params_with_updated_at(query_params, last_updated_at)
-
+            print(f"Fetching page {page} with cursor: {cursor} and last_updated_at: {last_updated_at_to_use}")
+            effective_query_params = self._merge_query_params_with_updated_at(query_params, last_updated_at_to_use)
+            last_updated_at_to_use = None
             try:
                 query = get_board_items_query(board_id, query_params=effective_query_params, cursor=cursor, limit=limit)
                 response = self.client.execute(query)
@@ -94,20 +100,18 @@ class BoardModule:
                 items.extend(items_page.items)
                 complexity = response.data.complexity.query
                 cursor = items_page.cursor
-
-                if cursor:
-                    sleep_according_to_complexity(complexity)
-                else:
+                if not cursor:
                     break
+                sleep_according_to_complexity(complexity)
+                page += 1
 
-            except MondayQueryError as e:
-                if "CursorExpiredError" in str(e):
-                    # Cursor expired - reset cursor and use updated_at filter to continue
+            except Exception as e:
+                if is_cursor_expired_error(e):
                     print(f"Cursor expired - resetting cursor and using updated_at filter to continue")
                     cursor = None
-                    # last_updated_at is already set from the last successful batch
+                    last_updated_at_to_use = last_updated_at
                     continue
-                raise  # Re-raise if it's a different error
+                raise e
 
         return items
 
@@ -121,14 +125,8 @@ class BoardModule:
         Always includes order_by to sort by updated_at ascending.
         If updated_after is provided, adds a filter to fetch items updated after that timestamp.
         """
-        order_by = [{"column_id": "__last_updated__", "direction": "asc"}]
-
-        if query_params is None:
-            merged_params: dict = {"order_by": order_by}
-        else:
-            # Create a new dict to avoid mutating the original
-            merged_params = dict(query_params)
-            merged_params["order_by"] = order_by
+        merged_params = query_params or {}
+        merged_params["order_by"] = [{"column_id": "__last_updated__", "direction": ItemsOrderByDirection.ASC}]
 
         if updated_after is not None:
             updated_at_rule = {
