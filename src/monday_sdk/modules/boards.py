@@ -50,8 +50,8 @@ class BoardModule:
     def _fetch_all_items(
         self,
         board_id: Union[int, str],
-        query_params: Optional[Mapping[str, Any]],
-        limit: int,
+        query_params: Optional[Mapping[str, Any]] = None,
+        limit: Optional[int] = DEFAULT_PAGE_LIMIT_ITEMS,
     ) -> List[Item]:
         """Internal method for standard item fetching with pagination."""
         items: List[Item] = []
