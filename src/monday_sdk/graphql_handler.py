@@ -6,8 +6,12 @@ import json
 import time
 
 from .constants import API_URL, FILE_UPLOAD_URL, TOKEN_HEADER, DEFAULT_MAX_RETRY_ATTEMPTS
-from .types import MondayApiResponse, FileInput
 from .exceptions import MondayQueryError
+from .graphql_errors import (
+    throw_monday_error,
+    update_retry_context_from_exception,
+)
+from .types import MondayApiResponse, FileInput
 
 
 class MondayGraphQL:
@@ -35,8 +39,10 @@ class MondayGraphQL:
         current_attempt = 0
         last_error = None
         last_status_code = None
+        last_request_id = None
 
         while current_attempt < self.max_retry_attempts:
+            response = None
 
             if self.debug_mode:
                 print(f"[debug_mode] about to execute query: {query}")
@@ -63,7 +69,7 @@ class MondayGraphQL:
                     continue
 
                 if "errors" in response_data:
-                    raise MondayQueryError(response_data["errors"][0]["message"], response_data["errors"])
+                    throw_monday_error(response_data)
 
                 try:
                     # Store the raw response before deserialization
@@ -73,32 +79,39 @@ class MondayGraphQL:
 
                 except dacite.DaciteError as e:
                     print(f"Error while deserializing response: {e}")
-                    raise MondayQueryError("Error while deserializing response", response_data)
+                    throw_monday_error(
+                        response_data,
+                        message="Error while deserializing response",
+                        original_errors=response_data,
+                    )
 
             except (requests.HTTPError, json.JSONDecodeError, MondayQueryError) as e:
                 print(f"Error while executing query: {e}")
                 last_error = e
-                if hasattr(e, 'response') and e.response is not None:
-                    last_status_code = e.response.status_code
+                last_status_code, last_request_id = update_retry_context_from_exception(
+                    e, response, last_status_code, last_request_id
+                )
                 current_attempt += 1
 
         # All retries exhausted - raise appropriate error based on the last failure
+        request_id_message = "" if last_request_id is None else f'\nShare request_id="{last_request_id}" with monday.com support for investigation.'
+
         if last_status_code == 504:
             raise Exception(
                 f"Monday API server encountered an internal error (HTTP 504 Gateway Timeout) "
                 f"for {self.max_retry_attempts} consecutive attempts. The server was unable to process "
                 f"the request within the timeout period. Please try again later or contact support "
-                f"if the issue persists."
+                f"if the issue persists.{request_id_message}"
             )
         elif last_status_code is not None:
             raise Exception(
                 f"Monday API request failed with HTTP {last_status_code} after {self.max_retry_attempts} attempts. "
-                f"Error: {str(last_error)}"
+                f"Error: {str(last_error)}{request_id_message}"
             )
         else:
             raise Exception(
                 f"Monday API request failed after {self.max_retry_attempts} attempts. "
-                f"Error: {str(last_error)}"
+                f"Error: {str(last_error)}{request_id_message}"
             )
 
     def _send(self, query: str):
