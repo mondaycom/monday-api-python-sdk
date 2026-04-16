@@ -91,6 +91,7 @@ class BoardModule:
         orders by __last_updated__ ascending to ensure correct cursor recovery.
         """
         items: List[Item] = []
+        seen_item_ids: set = set()
         cursor = None
         last_updated_at: Optional[str] = None
         last_updated_at_to_use = None
@@ -109,7 +110,11 @@ class BoardModule:
                 if items_page.items:
                     last_updated_at = items_page.items[-1].updated_at
 
-                items.extend(items_page.items)
+                for item in items_page.items:
+                    if item.id not in seen_item_ids:
+                        seen_item_ids.add(item.id)
+                        items.append(item)
+
                 complexity = response.data.complexity.query
                 cursor = items_page.cursor
                 if not cursor:
