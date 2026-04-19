@@ -15,5 +15,5 @@ from .api_response_types import (
     DocumentBlock,
     Document,
 )
-from .monday_enums import BoardKind, BoardState, BoardsOrderBy, Operator
+from .monday_enums import BoardKind, BoardState, BoardsOrderBy, Operator, ItemsOrderByDirection
 from .file_input import FileInput
