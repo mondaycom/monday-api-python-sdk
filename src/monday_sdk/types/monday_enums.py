@@ -61,3 +61,10 @@ class BoardsOrderBy(Enum):
 
     CREATED_AT = "created_at"
     USED_AT = "used_at"
+
+
+class ItemsOrderByDirection(Enum):
+    """Direction for ordering items"""
+
+    ASC = "asc"
+    DESC = "desc"
