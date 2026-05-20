@@ -45,27 +45,17 @@ class ColumnType(Enum):
 
     @property
     def is_readonly(self) -> bool:
-        """True if this column type cannot be written via ``column_values`` on
-        ``change_column_value`` / ``change_multiple_column_values`` mutations.
-
-        Includes system-managed columns (creation_log, last_updated,
-        auto_number, pulse_*, item_id), computed columns (mirror, formula,
-        progress), UI-only columns (button), and columns that require a
-        dedicated mutation rather than column_values (file uploads,
-        board_relation, dependency, subtasks).
-
-        Note: ``people`` / ``multiple-person`` / ``location`` are NOT in this
-        set — they are writable via column_values but require specific JSON
-        shapes (people IDs, lat/lng) rather than free-text input.
-        """
+        """True if column_values mutations cannot write to this column type."""
         return self in _READONLY_COLUMN_TYPES
 
     @property
     def is_writable(self) -> bool:
-        """Inverse of :attr:`is_readonly`."""
         return not self.is_readonly
 
 
+# people / multiple-person / location are intentionally excluded — they
+# accept column_values writes but require typed payloads (people IDs,
+# lat/lng) rather than free text.
 _READONLY_COLUMN_TYPES: frozenset[ColumnType] = frozenset(
     {
         ColumnType.AUTO_NUMBER,
