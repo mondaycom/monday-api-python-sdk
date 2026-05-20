@@ -18,21 +18,16 @@ class ItemModule:
     def change_custom_column_value(
         self, board_id: Union[str, int], item_id: Union[str, int], column_id: str, value: Dict[str, Any]
     ):
-        """Change any column by passing the raw value dict.
-
-        Prefer the type-specific helpers when one exists:
-          text       -> change_simple_column_value
-          status     -> change_status_column_value
-          date       -> change_date_column_value
-          email      -> change_email_column_value
-          phone      -> change_phone_column_value
-          link       -> change_link_column_value
-          checkbox   -> change_checkbox_column_value
-          dropdown   -> change_dropdown_column_value
-
-        Use this method directly only for column types without a dedicated
-        helper (country, location, people, tags, etc.) where you already
-        know the correct value shape.
+        """
+        for text columns, use change_simple_column_value
+        for status columns, use change_status_column_value
+        for date columns, use change_date_column_value
+        for email columns, use change_email_column_value
+        for phone columns, use change_phone_column_value
+        for link columns, use change_link_column_value
+        for checkbox columns, use change_checkbox_column_value
+        for dropdown columns, use change_dropdown_column_value
+        for other columns, use this method
         """
         query = change_column_value_query(board_id, item_id, column_id, value)
         return self.client.execute(query)
@@ -91,8 +86,6 @@ class ItemModule:
     def change_checkbox_column_value(
         self, board_id: Union[str, int], item_id: Union[str, int], column_id: str, checked: bool
     ):
-        """Setting checked=False unchecks the box by sending an empty object,
-        which is how Monday's API clears a checkbox column."""
         dict_value = {"checked": "true"} if checked else {}
         return self.change_custom_column_value(board_id, item_id, column_id, dict_value)
 
@@ -103,7 +96,6 @@ class ItemModule:
         column_id: str,
         labels: List[str],
     ):
-        """Set the dropdown's selected labels. Pass an empty list to clear."""
         dict_value = {"labels": list(labels)}
         return self.change_custom_column_value(board_id, item_id, column_id, dict_value)
 
