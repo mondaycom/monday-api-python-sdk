@@ -10,12 +10,18 @@ class Column:
 
 
 @dataclass
+class LinkedItem:
+    id: Optional[str] = field(default=None)
+
+
+@dataclass
 class ColumnValue:
     value: Optional[str] = field(default=None)
     text: Optional[str] = field(default=None)
     type: Optional[str] = field(default=None)
     column: Optional[Column] = field(default=None)
     display_value: Optional[str] = field(default=None)
+    linked_items: Optional[List[LinkedItem]] = field(default=None)
 
 
 @dataclass

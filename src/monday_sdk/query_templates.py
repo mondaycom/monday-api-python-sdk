@@ -10,10 +10,10 @@ from .utils import monday_json_stringify, gather_params
 
 
 def get_board_items_query(
-    board_ids: Union[int, str],
-    limit: int,
-    query_params: Optional[Mapping[str, Any]] = None,
-    cursor: Optional[str] = None,
+        board_ids: Union[int, str],
+        limit: int,
+        query_params: Optional[Mapping[str, Any]] = None,
+        cursor: Optional[str] = None,
 ) -> str:
     if cursor is None:
         return get_board_items_first_page_query(board_ids, query_params=query_params, limit=limit)
@@ -22,7 +22,7 @@ def get_board_items_query(
 
 
 def get_board_items_first_page_query(
-    board_id: Union[str, int], limit: int, query_params: Optional[Mapping[str, Any]] = None
+        board_id: Union[str, int], limit: int, query_params: Optional[Mapping[str, Any]] = None
 ) -> str:
     raw_params = locals().items()
     items_page_params = gather_params(raw_params, excluded_params=["board_id"])
@@ -52,6 +52,9 @@ def get_board_items_first_page_query(
                       }
                       ... on BoardRelationValue {
                         display_value
+                        linked_items {
+                          id
+                        }
                       }
                       ... on DependencyValue {
                         display_value
@@ -84,6 +87,9 @@ def get_board_items_first_page_query(
                         }
                         ... on BoardRelationValue {
                           display_value
+                          linked_items {
+                            id
+                          }
                         }
                         text
                         type
@@ -126,6 +132,9 @@ def get_board_items_pagination_query(cursor: str, limit: int) -> str:
                   }
                   ... on BoardRelationValue {
                     display_value
+                    linked_items {
+                      id
+                    }
                   }
                   ... on DependencyValue {
                     display_value
@@ -155,6 +164,9 @@ def get_board_items_pagination_query(cursor: str, limit: int) -> str:
                     }
                     ... on BoardRelationValue {
                       display_value
+                      linked_items {
+                        id
+                      }
                     }
                     text
                     type
@@ -238,30 +250,30 @@ def get_item_query(board_id, column_id, value, limit, cursor=None):
     items_page_params = gather_params(raw_params, excluded_params=["column_id", "value"])
 
     query = (
-        """query
-        {
-            items_page_by_column_values (%s) {
-                cursor
-                items {
-                    id
-                    name
-                    updates {
+            """query
+            {
+                items_page_by_column_values (%s) {
+                    cursor
+                    items {
                         id
-                        body
+                        name
+                        updates {
+                            id
+                            body
+                        }
+                        group {
+                            id
+                            title
+                        }
+                        column_values {
+                            id
+                            text
+                            value
+                        }                
                     }
-                    group {
-                        id
-                        title
-                    }
-                    column_values {
-                        id
-                        text
-                        value
-                    }                
                 }
-            }
-        }"""
-        % items_page_params
+            }"""
+            % items_page_params
     )
 
     return query
@@ -287,6 +299,9 @@ def get_item_by_id_query(ids):
                   }
                   ... on BoardRelationValue {
                     display_value
+                    linked_items {
+                      id
+                    }
                   }
                   ... on DependencyValue {
                     display_value
@@ -318,6 +333,9 @@ def get_item_by_id_query(ids):
                     }
                     ... on BoardRelationValue {
                       display_value
+                      linked_items {
+                        id
+                      }
                     }
                     text
                     type
@@ -400,54 +418,54 @@ def move_item_to_group_query(item_id, group_id):
 
 def archive_item_query(item_id):
     query = (
-        """
-    mutation
-    {
-        archive_item (item_id: %s)
+            """
+        mutation
         {
-            id
-        }
-    }"""
-        % item_id
+            archive_item (item_id: %s)
+            {
+                id
+            }
+        }"""
+            % item_id
     )
     return query
 
 
 def delete_item_query(item_id):
     query = (
-        """
-    mutation
-    {
-        delete_item (item_id: %s)
+            """
+        mutation
         {
-            id
-        }
-    }"""
-        % item_id
+            delete_item (item_id: %s)
+            {
+                id
+            }
+        }"""
+            % item_id
     )
     return query
 
 
 def get_columns_by_board_query(board_id):
     return (
-        """query
-        {
-            boards(ids: %s) {
-                id
-                name
-                groups {
+            """query
+            {
+                boards(ids: %s) {
                     id
-                    title
+                    name
+                    groups {
+                        id
+                        title
+                    }
+                    columns {
+                        title
+                        id
+                        type
+                        settings_str
+                     }
                 }
-                columns {
-                    title
-                    id
-                    type
-                    settings_str
-                 }
-            }
-        }"""
-        % board_id
+            }"""
+            % board_id
     )
 
 
@@ -497,12 +515,12 @@ def create_update_query(item_id, update_value):
 
 def delete_update_query(item_id):
     query = (
-        """mutation {
-        delete_update (id: %s) {
-            id
-        }
-    }"""
-        % item_id
+            """mutation {
+            delete_update (id: %s) {
+                id
+            }
+        }"""
+            % item_id
     )
 
     return query
@@ -552,12 +570,12 @@ def get_updates_for_item_query(item_id, limit: int):
 def get_updates_for_board(board_id, limit: int, page=1, from_date: Optional[str] = None, to_date: Optional[str] = None):
     # Build the updates parameters
     updates_params = f"limit: {limit}, page: {page}"
-    
+
     if from_date:
         updates_params += f', from_date: "{from_date}"'
     if to_date:
         updates_params += f', to_date: "{to_date}"'
-    
+
     query = """query
     {
         boards(ids: %s) {
@@ -600,12 +618,12 @@ def get_update_query(limit, page=1):
 
 
 def get_boards_query(
-    ids: List[int],
-    limit: int,
-    page: int = 1,
-    board_kind: BoardKind = None,
-    state: BoardState = None,
-    order_by: BoardsOrderBy = None,
+        ids: List[int],
+        limit: int,
+        page: int = 1,
+        board_kind: BoardKind = None,
+        state: BoardState = None,
+        order_by: BoardsOrderBy = None,
 ):
     parameters = locals().items()
     query_params = []
@@ -618,28 +636,28 @@ def get_boards_query(
     joined_params = f"({', '.join(query_params)})" if query_params else ""
 
     query = (
-        """query
-    {
-        boards %s {
-            id
-            name
-            permissions
-            tags {
-              id
-              name
-            }
-            groups {
+            """query
+        {
+            boards %s {
                 id
-                title
+                name
+                permissions
+                tags {
+                  id
+                  name
+                }
+                groups {
+                    id
+                    title
+                }
+                columns {
+                    id
+                    title
+                    type
+                }
             }
-            columns {
-                id
-                title
-                type
-            }
-        }
-    }"""
-        % joined_params
+        }"""
+            % joined_params
     )
 
     return query
@@ -647,29 +665,29 @@ def get_boards_query(
 
 def get_board_by_id_query(board_id: Union[int, str]):
     return (
-        """query
-    {
-        boards (ids: %s) {
-            id
-            name
-            permissions
-            tags {
-              id
-              name
-            }
-            groups {
+            """query
+        {
+            boards (ids: %s) {
                 id
-                title
+                name
+                permissions
+                tags {
+                  id
+                  name
+                }
+                groups {
+                    id
+                    title
+                }
+                columns {
+                    id
+                    title
+                    type
+                    settings_str
+                }
             }
-            columns {
-                id
-                title
-                type
-                settings_str
-            }
-        }
-    }"""
-        % board_id
+        }"""
+            % board_id
     )
 
 
@@ -715,11 +733,11 @@ def get_complexity_query():
 
 
 def get_activity_logs_query(
-    board_id: Union[int, str],
-    limit: int,
-    page: Optional[int] = 1,
-    from_date: Optional[str] = None,
-    to_date: Optional[str] = None,
+        board_id: Union[int, str],
+        limit: int,
+        page: Optional[int] = 1,
+        from_date: Optional[str] = None,
+        to_date: Optional[str] = None,
 ):
     raw_params = locals().items()
     activity_logs_params = gather_params(raw_params, excluded_params=["board_id", "from_date", "to_date"])
