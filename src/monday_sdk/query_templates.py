@@ -570,7 +570,7 @@ def get_updates_for_item_query(item_id, limit: int):
 def get_updates_for_board(board_id, limit: int, page=1, from_date: Optional[str] = None, to_date: Optional[str] = None):
     # Build the updates parameters
     updates_params = f"limit: {limit}, page: {page}"
-
+    
     if from_date:
         updates_params += f', from_date: "{from_date}"'
     if to_date:
@@ -613,7 +613,7 @@ def get_update_query(limit, page=1):
         limit,
         page,
     )
-    
+
     return query
 
 
@@ -643,8 +643,8 @@ def get_boards_query(
             name
             permissions
             tags {
-                id
-                name
+              id
+              name
             }
             groups {
                 id
@@ -672,8 +672,8 @@ def get_board_by_id_query(board_id: Union[int, str]):
             name
             permissions
             tags {
-                id
-                name
+              id
+              name
             }
             groups {
                 id
