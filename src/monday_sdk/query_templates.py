@@ -515,12 +515,12 @@ def create_update_query(item_id, update_value):
 
 def delete_update_query(item_id):
     query = (
-            """mutation {
-            delete_update (id: %s) {
-                id
-            }
-        }"""
-            % item_id
+        """mutation {
+        delete_update (id: %s) {
+            id
+        }
+    }"""
+        % item_id
     )
 
     return query
@@ -575,7 +575,7 @@ def get_updates_for_board(board_id, limit: int, page=1, from_date: Optional[str]
         updates_params += f', from_date: "{from_date}"'
     if to_date:
         updates_params += f', to_date: "{to_date}"'
-
+    
     query = """query
     {
         boards(ids: %s) {
@@ -613,17 +613,17 @@ def get_update_query(limit, page=1):
         limit,
         page,
     )
-
+    
     return query
 
 
 def get_boards_query(
-        ids: List[int],
-        limit: int,
-        page: int = 1,
-        board_kind: BoardKind = None,
-        state: BoardState = None,
-        order_by: BoardsOrderBy = None,
+    ids: List[int],
+    limit: int,
+    page: int = 1,
+    board_kind: BoardKind = None,
+    state: BoardState = None,
+    order_by: BoardsOrderBy = None,
 ):
     parameters = locals().items()
     query_params = []
@@ -636,28 +636,28 @@ def get_boards_query(
     joined_params = f"({', '.join(query_params)})" if query_params else ""
 
     query = (
-            """query
-        {
-            boards %s {
+        """query
+    {
+        boards %s {
+            id
+            name
+            permissions
+            tags {
                 id
                 name
-                permissions
-                tags {
-                  id
-                  name
-                }
-                groups {
-                    id
-                    title
-                }
-                columns {
-                    id
-                    title
-                    type
-                }
             }
-        }"""
-            % joined_params
+            groups {
+                id
+                title
+            }
+            columns {
+                id
+                title
+                type
+            }
+        }
+    }"""
+        % joined_params
     )
 
     return query
@@ -665,29 +665,29 @@ def get_boards_query(
 
 def get_board_by_id_query(board_id: Union[int, str]):
     return (
-            """query
-        {
-            boards (ids: %s) {
+        """query
+    {
+        boards (ids: %s) {
+            id
+            name
+            permissions
+            tags {
                 id
                 name
-                permissions
-                tags {
-                  id
-                  name
-                }
-                groups {
-                    id
-                    title
-                }
-                columns {
-                    id
-                    title
-                    type
-                    settings_str
-                }
             }
-        }"""
-            % board_id
+            groups {
+                id
+                title
+            }
+            columns {
+                id
+                title
+                type
+                settings_str
+            }
+        }
+    }"""
+        % board_id
     )
 
 
