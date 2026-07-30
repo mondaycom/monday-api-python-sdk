@@ -10,10 +10,10 @@ from .utils import monday_json_stringify, gather_params
 
 
 def get_board_items_query(
-        board_ids: Union[int, str],
-        limit: int,
-        query_params: Optional[Mapping[str, Any]] = None,
-        cursor: Optional[str] = None,
+    board_ids: Union[int, str],
+    limit: int,
+    query_params: Optional[Mapping[str, Any]] = None,
+    cursor: Optional[str] = None,
 ) -> str:
     if cursor is None:
         return get_board_items_first_page_query(board_ids, query_params=query_params, limit=limit)
@@ -22,7 +22,7 @@ def get_board_items_query(
 
 
 def get_board_items_first_page_query(
-        board_id: Union[str, int], limit: int, query_params: Optional[Mapping[str, Any]] = None
+    board_id: Union[str, int], limit: int, query_params: Optional[Mapping[str, Any]] = None
 ) -> str:
     raw_params = locals().items()
     items_page_params = gather_params(raw_params, excluded_params=["board_id"])
@@ -250,30 +250,30 @@ def get_item_query(board_id, column_id, value, limit, cursor=None):
     items_page_params = gather_params(raw_params, excluded_params=["column_id", "value"])
 
     query = (
-            """query
-            {
-                items_page_by_column_values (%s) {
-                    cursor
-                    items {
+        """query
+        {
+            items_page_by_column_values (%s) {
+                cursor
+                items {
+                    id
+                    name
+                    updates {
                         id
-                        name
-                        updates {
-                            id
-                            body
-                        }
-                        group {
-                            id
-                            title
-                        }
-                        column_values {
-                            id
-                            text
-                            value
-                        }                
+                        body
                     }
+                    group {
+                        id
+                        title
+                    }
+                    column_values {
+                        id
+                        text
+                        value
+                    }                
                 }
-            }"""
-            % items_page_params
+            }
+        }"""
+        % items_page_params
     )
 
     return query
@@ -418,54 +418,54 @@ def move_item_to_group_query(item_id, group_id):
 
 def archive_item_query(item_id):
     query = (
-            """
-        mutation
+        """
+    mutation
+    {
+        archive_item (item_id: %s)
         {
-            archive_item (item_id: %s)
-            {
-                id
-            }
-        }"""
-            % item_id
+            id
+        }
+    }"""
+        % item_id
     )
     return query
 
 
 def delete_item_query(item_id):
     query = (
-            """
-        mutation
+        """
+    mutation
+    {
+        delete_item (item_id: %s)
         {
-            delete_item (item_id: %s)
-            {
-                id
-            }
-        }"""
-            % item_id
+            id
+        }
+    }"""
+        % item_id
     )
     return query
 
 
 def get_columns_by_board_query(board_id):
     return (
-            """query
-            {
-                boards(ids: %s) {
+        """query
+        {
+            boards(ids: %s) {
+                id
+                name
+                groups {
                     id
-                    name
-                    groups {
-                        id
-                        title
-                    }
-                    columns {
-                        title
-                        id
-                        type
-                        settings_str
-                     }
+                    title
                 }
-            }"""
-            % board_id
+                columns {
+                    title
+                    id
+                    type
+                    settings_str
+                 }
+            }
+        }"""
+        % board_id
     )
 
 
@@ -733,11 +733,11 @@ def get_complexity_query():
 
 
 def get_activity_logs_query(
-        board_id: Union[int, str],
-        limit: int,
-        page: Optional[int] = 1,
-        from_date: Optional[str] = None,
-        to_date: Optional[str] = None,
+    board_id: Union[int, str],
+    limit: int,
+    page: Optional[int] = 1,
+    from_date: Optional[str] = None,
+    to_date: Optional[str] = None,
 ):
     raw_params = locals().items()
     activity_logs_params = gather_params(raw_params, excluded_params=["board_id", "from_date", "to_date"])
