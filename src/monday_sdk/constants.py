@@ -9,3 +9,8 @@ DEFAULT_PAGE_LIMIT_ITEMS = 500
 DEFAULT_PAGE_LIMIT_UPDATES = 1000
 DEFAULT_PAGE_LIMIT_BOARDS = 50
 DEFAULT_PAGE_LIMIT_ACTIVITY_LOGS = 1000
+
+# The `items(ids: ...)` root query accepts at most 100 ids per request and
+# paginates its result with `limit` (which the API defaults to 25).
+MAX_ITEMS_BY_ID_PER_REQUEST = 100
+DEFAULT_PAGE_LIMIT_ITEMS_BY_ID = 100

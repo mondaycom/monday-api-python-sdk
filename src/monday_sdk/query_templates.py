@@ -2,6 +2,7 @@ import json
 from enum import Enum
 from typing import List, Union, Optional, Mapping, Any
 
+from .constants import DEFAULT_PAGE_LIMIT_ITEMS_BY_ID
 from .types import BoardKind, BoardState, BoardsOrderBy
 from .utils import monday_json_stringify, gather_params
 
@@ -267,13 +268,13 @@ def get_item_query(board_id, column_id, value, limit, cursor=None):
     return query
 
 
-def get_item_by_id_query(ids):
+def get_item_by_id_query(ids, limit: int = DEFAULT_PAGE_LIMIT_ITEMS_BY_ID, page: int = 1):
     query = """{
             complexity {
             query
             after
           }
-            items(ids: %s){
+            items(ids: %s, limit: %s, page: %s){
                 id
                 name
                 state
@@ -329,7 +330,9 @@ def get_item_by_id_query(ids):
                 }
             }
         }""" % (
-        ids
+        ids,
+        limit,
+        page,
     )
 
     return query
