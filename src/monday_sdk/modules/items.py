@@ -2,6 +2,7 @@ from typing import Union, Dict, Any, List, Optional
 import datetime
 import os
 
+from ..constants import MAX_ITEMS_BY_ID_PER_REQUEST
 from ..graphql_handler import MondayGraphQL
 from ..types import FileInput
 from ..query_templates import create_item_query, get_item_query, change_column_value_query, get_item_by_id_query, update_multiple_column_values_query, create_subitem_query, delete_item_query, archive_item_query, move_item_to_group_query, change_simple_column_value_query
@@ -73,12 +74,35 @@ class ItemModule:
         return self.client.execute(query)
 
     def fetch_items_by_id(self, ids: Union[str, int, List[Union[str, int]]]) -> List[Item]:
+        """
+        Fetches items by id in a single request.
+
+        The `items(ids: ...)` query paginates its result and the API defaults the page
+        size to 25, so the page size is derived from the number of ids requested. Without
+        it, asking for more than 25 ids returns only the 25 lowest ones - with no error
+        and no way for the caller to tell that anything was dropped.
+
+        The API accepts at most MAX_ITEMS_BY_ID_PER_REQUEST ids per request, which is also
+        the largest page it will return, so one request is always enough to cover the ids
+        asked for and there is nothing left to paginate through. Chunk larger id sets
+        caller-side.
+        """
         if isinstance(ids, (list, set)):
+            if len(ids) > MAX_ITEMS_BY_ID_PER_REQUEST:
+                raise ValueError(
+                    f"fetch_items_by_id accepts at most {MAX_ITEMS_BY_ID_PER_REQUEST} ids per request, got {len(ids)}"
+                )
+            if not ids:
+                return []
+            limit = len(ids)
             ids_str = ", ".join(map(str, ids))
             ids_str = f"[{ids_str}]"
         else:
+            # A bare id, or an id list the caller already formatted - we cannot count it,
+            # so ask for the largest page the API will give us.
+            limit = MAX_ITEMS_BY_ID_PER_REQUEST
             ids_str = str(ids)
-        query = get_item_by_id_query(ids_str)
+        query = get_item_by_id_query(ids_str, limit=limit)
         response = self.client.execute(query)
         return response.data.items
 
