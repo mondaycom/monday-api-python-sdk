@@ -258,6 +258,10 @@ def get_item_query(board_id, column_id, value, limit, cursor=None):
                         id
                         text
                         value
+                        column {
+                            id
+                            title
+                        }
                     }                
                 }
             }
