@@ -53,6 +53,9 @@ def get_board_items_first_page_query(
                       }
                       ... on BoardRelationValue {
                         display_value
+                        linked_items {
+                          id
+                        }
                       }
                       ... on DependencyValue {
                         display_value
@@ -85,6 +88,9 @@ def get_board_items_first_page_query(
                         }
                         ... on BoardRelationValue {
                           display_value
+                          linked_items {
+                            id
+                          }
                         }
                         text
                         type
@@ -127,6 +133,9 @@ def get_board_items_pagination_query(cursor: str, limit: int) -> str:
                   }
                   ... on BoardRelationValue {
                     display_value
+                    linked_items {
+                      id
+                    }
                   }
                   ... on DependencyValue {
                     display_value
@@ -156,6 +165,9 @@ def get_board_items_pagination_query(cursor: str, limit: int) -> str:
                     }
                     ... on BoardRelationValue {
                       display_value
+                      linked_items {
+                        id
+                      }
                     }
                     text
                     type
@@ -288,6 +300,9 @@ def get_item_by_id_query(ids, limit: int = DEFAULT_PAGE_LIMIT_ITEMS_BY_ID, page:
                   }
                   ... on BoardRelationValue {
                     display_value
+                    linked_items {
+                      id
+                    }
                   }
                   ... on DependencyValue {
                     display_value
@@ -319,6 +334,9 @@ def get_item_by_id_query(ids, limit: int = DEFAULT_PAGE_LIMIT_ITEMS_BY_ID, page:
                     }
                     ... on BoardRelationValue {
                       display_value
+                      linked_items {
+                        id
+                      }
                     }
                     text
                     type
