@@ -23,7 +23,12 @@ class ItemModule:
         for text columns, use change_simple_column_value
         for status columns, use change_status_column_value
         for date columns, use change_date_column_value
-        for other columns, use this method, for example, for checkbox columns pass {'checked': True}
+        for email columns, use change_email_column_value
+        for phone columns, use change_phone_column_value
+        for link columns, use change_link_column_value
+        for checkbox columns, use change_checkbox_column_value
+        for dropdown columns, use change_dropdown_column_value
+        for other columns, use this method
         """
         query = change_column_value_query(board_id, item_id, column_id, value)
         return self.client.execute(query)
@@ -44,6 +49,55 @@ class ItemModule:
         self, board_id: Union[str, int], item_id: Union[str, int], column_id: str, timestamp: datetime
     ):
         dict_value = {"date": timestamp.strftime("%Y-%m-%d"), "time": timestamp.strftime("%H:%M:%S")}
+        return self.change_custom_column_value(board_id, item_id, column_id, dict_value)
+
+    def change_email_column_value(
+        self,
+        board_id: Union[str, int],
+        item_id: Union[str, int],
+        column_id: str,
+        email: str,
+        text: Optional[str] = None,
+    ):
+        dict_value = {"email": email, "text": text if text is not None else email}
+        return self.change_custom_column_value(board_id, item_id, column_id, dict_value)
+
+    def change_phone_column_value(
+        self,
+        board_id: Union[str, int],
+        item_id: Union[str, int],
+        column_id: str,
+        phone: str,
+        country_short_name: str = "",
+    ):
+        dict_value = {"phone": phone, "countryShortName": country_short_name}
+        return self.change_custom_column_value(board_id, item_id, column_id, dict_value)
+
+    def change_link_column_value(
+        self,
+        board_id: Union[str, int],
+        item_id: Union[str, int],
+        column_id: str,
+        url: str,
+        text: Optional[str] = None,
+    ):
+        dict_value = {"url": url, "text": text if text is not None else url}
+        return self.change_custom_column_value(board_id, item_id, column_id, dict_value)
+
+    def change_checkbox_column_value(
+        self, board_id: Union[str, int], item_id: Union[str, int], column_id: str, checked: bool
+    ):
+        dict_value = {"checked": "true"} if checked else {}
+        return self.change_custom_column_value(board_id, item_id, column_id, dict_value)
+
+    def change_dropdown_column_value(
+        self,
+        board_id: Union[str, int],
+        item_id: Union[str, int],
+        column_id: str,
+        labels: List[str],
+    ):
+        dict_value = {"labels": list(labels)}
         return self.change_custom_column_value(board_id, item_id, column_id, dict_value)
 
     def create_item(
