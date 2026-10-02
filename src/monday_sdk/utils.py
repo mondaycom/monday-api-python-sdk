@@ -63,7 +63,9 @@ def format_param_value(value: Any) -> str:
     if value is None:
         return "null"
     if isinstance(value, str):
-        return f'"{value}"'
+        return json.dumps(value)
+    if isinstance(value, bool):
+        return "true" if value else "false"
     if isinstance(value, Enum):
         return str(value.value)
     if isinstance(value, dict):

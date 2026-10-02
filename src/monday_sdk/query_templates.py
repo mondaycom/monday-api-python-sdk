@@ -185,7 +185,7 @@ def create_item_query(board_id, group_id, item_name, column_values, create_label
         create_item (
             board_id: %s,
             group_id: "%s",
-            item_name: "%s",
+            item_name: %s,
             column_values: %s,
             create_labels_if_missing: %s
         ) {
@@ -194,7 +194,7 @@ def create_item_query(board_id, group_id, item_name, column_values, create_label
     }""" % (
         board_id,
         group_id,
-        item_name,
+        json.dumps(item_name),
         monday_json_stringify(column_values),
         str(create_labels_if_missing).lower(),
     )
@@ -209,7 +209,7 @@ def create_subitem_query(parent_item_id, subitem_name, column_values, create_lab
     {
         create_subitem (
             parent_item_id: %s,
-            item_name: "%s",
+            item_name: %s,
             column_values: %s,
             create_labels_if_missing: %s
         ) {
@@ -226,7 +226,7 @@ def create_subitem_query(parent_item_id, subitem_name, column_values, create_lab
         }
     }""" % (
         parent_item_id,
-        subitem_name,
+        json.dumps(subitem_name),
         monday_json_stringify(column_values),
         str(create_labels_if_missing).lower(),
     )
@@ -372,7 +372,7 @@ def change_simple_column_value_query(board_id, item_id, column_id, value):
             board_id: %s,
             item_id: %s,
             column_id: "%s",
-            value: "%s"
+            value: %s
         ) {
             id
         }
@@ -380,7 +380,7 @@ def change_simple_column_value_query(board_id, item_id, column_id, value):
         board_id,
         item_id,
         column_id,
-        value,
+        json.dumps(value),
     )
 
     return query
