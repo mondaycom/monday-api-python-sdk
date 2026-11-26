@@ -7,8 +7,8 @@ BASE_HEADERS = {"API-Version": API_VERSION}
 
 class MondayClient:
     def __init__(self, token, headers=None, debug_mode=False, max_retry_attempts=DEFAULT_MAX_RETRY_ATTEMPTS):
-        headers = headers or BASE_HEADERS.copy()
-        
+        headers = {**BASE_HEADERS, **(headers or {})}
+
         # Create a single GraphQL client instance
         self._graphql_client = MondayGraphQL(
             token=token,
